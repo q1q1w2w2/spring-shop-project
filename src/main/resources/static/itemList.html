@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>아이템 목록</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f2f2f2;
+            padding: 2rem;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .item {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .item:hover {
+            transform: scale(1.05);
+        }
+        .logout-button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f44336; /* Red */
+            color: white;
+            cursor: pointer;
+        }
+        /* 이미지 크기 제한 */
+        .card-img-top {
+            max-height: 200px; /* 최대 높이 설정 */
+            object-fit: cover; /* 비율을 유지하면서 잘라내기 */
+        }
+    </style>
+</head>
+<body>
+<h2>아이템 목록</h2>
+<div id="itemList" class="row"></div>
+<button class="logout-button" onclick="logout()">로그아웃</button>
+
+<script>
+    // 페이지 로드 시 인증 확인 및 아이템 목록 로드
+    window.onload = async function() {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            // alert("로그인하고오시라고");
+            // window.location.href = '/login'; // 로그인 페이지로 리다이렉트
+            await loadItems(accessToken);
+        } else {
+            // alert("로그인된 상태");
+            await loadItems(accessToken); // 인증된 경우 아이템 목록 로드
+        }
+    };
+
+    async function loadItems(accessToken) {
+        try {
+            const response = await fetch('/item/list', {
+                method: 'GET',
+                headers: {
+                    // 'Authorization': `Hwannee ${accessToken}` // 인증이 필요 없음
+                }
+            });
+
+            if (!response.ok) {
+                alert('아이템 목록을 가져오는 데 실패했습니다.');
+                return;
+            }
+
+            const items = await response.json();
+            const itemListDiv = document.getElementById('itemList');
+
+            console.log(items);
+
+            if (items && items.length > 0) {
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'col-md-4 mb-4';
+                    itemDiv.innerHTML = `
+                            <div class="card item" onclick="goToDetail(${item.idx})">
+                                <img src="https://hwanbucket.s3.ap-northeast-2.amazonaws.com/${item.imageUrls[0]}" class="card-img-top" alt="${item.itemName}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.itemName}</h5>
+                                    <p class="card-text">가격: ${item.price} 원</p>
+                                </div>
+                            </div>
+                        `;
+                    itemListDiv.appendChild(itemDiv);
+                });
+            } else {
+                itemListDiv.innerHTML = '<p>아이템이 없습니다.</p>';
+            }
+        } catch (error) {
+            alert('오류 발생: ' + error.message);
+        }
+    }
+
+    function goToDetail(itemId) {
+        // 상품 상세 페이지로 이동
+        window.location.href = `/item/detail?id=${itemId}`; // 상품 상세 페이지 URL
+    }
+
+    function logout() {
+        // 로컬스토리지에서 토큰 제거
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/login'; // 로그인 페이지로 리다이렉트
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

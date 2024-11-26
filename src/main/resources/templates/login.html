@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px; /* 컨테이너 너비 설정 */
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        input {
+            width: 100%; /* 입력 필드 너비 조정 */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        .login-button {
+            background-color: #4CAF50; /* Green */
+        }
+        .signup-button {
+            background-color: #008CBA; /* Blue */
+        }
+        .google-button {
+            background-color: #DB4437; /* Google Red */
+        }
+        .naver-button {
+            background-color: #03C75A; /* Naver Green */
+        }
+    </style>
+    <script>
+    async function login() {
+        const loginId = document.getElementById('userId').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ loginId, password })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(errorData.message || '로그인 실패. 다시 시도해주세요.');
+                return;
+            }
+
+            const data = await response.json();
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+
+            // 아이템 목록 페이지로 이동
+            window.location.href = '/itemList.html';
+
+        } catch (error) {
+            alert('오류 발생: ' + error.message);
+        }
+    }
+</script>
+</head>
+<body>
+<div class="container">
+    <h2>로그인</h2>
+    <input type="text" id="userId" placeholder="아이디" />
+    <input type="password" id="password" placeholder="비밀번호" />
+
+    <button class="login-button" onclick="login()">로그인</button>
+    <button class="signup-button">회원가입</button>
+
+    <button class="google-button" onclick="location.href='/oauth2/authorization/google'">구글 로그인</button>
+    <button class="naver-button" onclick="location.href='/oauth2/authorization/naver'">네이버 로그인</button>
+</div>
+</body>
+</html>

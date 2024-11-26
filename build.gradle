@@ -1,0 +1,94 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.3'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// h2
+	runtimeOnly 'com.h2database:h2'
+
+	// p6spy(sql 파라미터)
+	implementation 'p6spy:p6spy:3.9.1'
+
+	// mysql
+	implementation 'mysql:mysql-connector-java:8.0.32'
+
+	// jjwt
+//	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+//	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+//	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// JWE
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.21.1'
+
+	// XML 문서와 Java 객체간 매핑 자동화
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
+	// oauth
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// queryDsl
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// 이메일 인증
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// querydsl
+clean {
+	delete file('src/main/generated')
+}
+
+// docker -> jar 파일이 두 개가 생겨 Docker image가 생성되지 않을 수 있음
+jar {
+	enabled = false
+}
