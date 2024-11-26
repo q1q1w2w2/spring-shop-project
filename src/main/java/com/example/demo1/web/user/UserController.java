@@ -33,7 +33,7 @@ public class UserController {
         User user = userService.join(dto);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "회원가입이 완료되었습니다.");
+        response.put("message", "회원가입이 완료되었습니다!");
         response.put("user", user);
 
         return ResponseEntity.ok(response);
