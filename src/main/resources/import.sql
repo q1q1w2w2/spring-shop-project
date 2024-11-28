@@ -1,1 +1,0 @@
-ALTER TABLE refresh_token ALTER COLUMN refresh_token TYPE VARCHAR(512);
