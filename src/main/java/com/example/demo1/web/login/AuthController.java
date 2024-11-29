@@ -3,11 +3,8 @@ package com.example.demo1.web.login;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.RefreshTokenDto;
 import com.example.demo1.service.login.AuthService;
-import com.example.demo1.service.login.RefreshTokenService;
-import com.example.demo1.util.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -54,10 +51,9 @@ public class AuthController {
     public ResponseEntity<Map> logout(
             @RequestHeader(AUTHORIZATION_HEADER) String authorization,
             @Validated @RequestBody RefreshTokenDto dto
-    ) {
+    ) throws Exception {
         String refreshToken = dto.getRefreshToken();
         String accessToken = authorization.substring(TOKEN_PREFIX.length());
-//        String accessToken = authorization.substring(BEARER_PREFIX.length());
 
         authService.logout(refreshToken, accessToken);
         return ResponseEntity.ok(Map.of("message", "로그아웃 되었습니다."));

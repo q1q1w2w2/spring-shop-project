@@ -38,13 +38,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8081", exposedHeaders = "Authorization")
 public class SecurityConfig {
 
-//    private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAuthenticationSuccessHandler myAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler myAuthenticationFailureHandler;
-    private final JwtFilter jwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -92,8 +91,8 @@ public class SecurityConfig {
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
 
-//                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // jwt 예외 처리
                 .exceptionHandling(exceptionHandling ->

@@ -1,13 +1,14 @@
 package com.example.demo1.util.jwt;
 
-import com.example.demo1.exception.token.TokenValidationException;
 import com.example.demo1.service.login.CustomUserDetailsService;
-import com.example.demo1.service.login.RefreshTokenService;
 import com.example.demo1.util.aes.AesUtil;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,11 +20,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.*;
 
-//@Component
+@Component
 @Slf4j
-public class TokenProvider {
+public class TokenProvider implements InitializingBean {
 
-    /** + implements InitializingBean
     private SecretKey key;
     private SecretKey claimKey;
 
@@ -31,7 +31,7 @@ public class TokenProvider {
     private final long accessTokenExpireTime;
     private final long refreshTokenExpireTime;
     private final CustomUserDetailsService customUserDetailsService;
-    private final RefreshTokenService refreshTokenService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
@@ -39,14 +39,14 @@ public class TokenProvider {
             @Value("${jwt.refresh-token-expire-time}") long refreshTokenExpireTime,
             @Value("${jwt.claim-key}") String claimKeyString,
             CustomUserDetailsService customUserDetailsService,
-            RefreshTokenService refreshTokenService
+            RedisTemplate<String, String> redisTemplate
     ) throws Exception {
         this.secret = secret;
         this.accessTokenExpireTime = accessTokenExpireTime * 1000;
         this.refreshTokenExpireTime = refreshTokenExpireTime * 1000;
         this.claimKey = AesUtil.generateKeyFromString(claimKeyString);
         this.customUserDetailsService = customUserDetailsService;
-        this.refreshTokenService = refreshTokenService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class TokenProvider {
         String encryptAuthority = AesUtil.encrypt("ROLE_USER", claimKey);
         String refreshToken = createToken(encryptSubject, encryptAuthority, refreshTokenExpireTime);
 
-        refreshTokenService.saveRefreshToken(refreshToken, subject);
+        redisTemplate.opsForValue().set("refreshToken:" + subject, refreshToken);
 
         return refreshToken;
     }
@@ -76,10 +76,6 @@ public class TokenProvider {
         // refresh token의 subject로 userDetails찾아서 거기서 권한을 가져옴
         // 그래서 createRefreshToken으로 만들어진 refresh token의 권한이 상관없음 -> 애초에 refresh token에 subject만 포함되면 됨
         String authority = getAuthorityFromRefreshToken(refreshToken);
-        if (refreshTokenService.isRefreshTokenExpired(refreshToken)) {
-            throw new TokenValidationException("유효하지 않은 refresh token입니다.");
-        }
-
         String subject = extractUserIdFromRefreshToken(refreshToken);
         return createAccessToken(subject, authority);
     }
@@ -172,5 +168,4 @@ public class TokenProvider {
         return false;
     }
 
-**/
 }

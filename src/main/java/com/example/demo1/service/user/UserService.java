@@ -6,9 +6,8 @@ import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.UpdateDto;
 import com.example.demo1.exception.user.UserAlreadyExistException;
 import com.example.demo1.exception.user.UserNotFoundException;
-import com.example.demo1.libs.auth.TokenRequest;
 import com.example.demo1.repository.user.UserRepository;
-import com.example.demo1.util.constant.Constants;
+import com.example.demo1.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.demo1.util.constant.Constants.*;
 
@@ -149,8 +147,7 @@ public class UserService {
 
     // 현재 사용자
     public User getCurrentUser(Authentication authentication) {
-        TokenRequest tokenRequest = TokenRequest.toObject(authentication.getPrincipal().toString());
-        return findByLoginId(tokenRequest.getId());
+        return findByLoginId(authentication.getName());
     }
 
     // 사용자 밴/해제

@@ -38,10 +38,8 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
 
     private List<Orders> findAllWithCondition(OrderSearch orderSearch, User user) {
         QOrders o = QOrders.orders;
-        QUser u = QUser.user;
-
         QOrderLog ol = QOrderLog.orderLog;
-        QItem i = QItem.item;
+        QUser u = QUser.user;
 
         BooleanBuilder builder = new BooleanBuilder();
 

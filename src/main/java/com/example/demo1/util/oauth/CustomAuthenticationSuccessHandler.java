@@ -1,6 +1,5 @@
 package com.example.demo1.util.oauth;
 
-import com.example.demo1.libs.auth.Auth;
 import com.example.demo1.util.jwt.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -23,13 +22,12 @@ import java.util.Map;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     // OAuth 인증 성공 후 처리를 위한 클래스
 
-    //    private final TokenProvider tokenProvider;
-    private final Auth auth;
+        private final TokenProvider tokenProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("[AuthenticationSuccessHandler 실행]");
-/**
+
         // OAuth2User로 캐스팅하여 인증된 사용자 정보를 가져온다.
 //        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         OAuth2CustomUser oAuth2User = (OAuth2CustomUser) authentication.getPrincipal();
@@ -67,6 +65,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.setContentType("application/json");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         objectMapper.writeValue(response.getOutputStream(), responseMap);
-**/
+
     }
 }

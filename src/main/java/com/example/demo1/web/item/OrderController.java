@@ -42,12 +42,21 @@ public class OrderController {
     @GetMapping("/order/list/admin")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<Object>> orderListAdmin(OrderSearch orderSearch) {
+        long start = System.currentTimeMillis();
+
         List<Orders> list = orderService.findAll(orderSearch);
         List<Object> response = new ArrayList<>();
 
         for (Orders order : list) {
             Map<String, Object> orderResponse = new HashMap<>();
             orderResponse.put("orderInfo", new OrderResponseDto(order));
+
+
+//            ArrayList<OrderLogResponseDto> orderLogResponse = new ArrayList<>();
+//            List<OrderLog> orderLogs = order.getOrderLogs();
+//            for (OrderLog orderLog : orderLogs) {
+//                orderLogResponse.add(new OrderLogResponseDto(orderLog));
+//            }
 
             List<Map<String, Object>> orderLogResponse = new ArrayList<>();
 
@@ -61,6 +70,8 @@ public class OrderController {
             orderResponse.put("orderLogs", orderLogResponse);
             response.add(orderResponse);
         }
+        long end = System.currentTimeMillis();
+        log.info("response time: {} ms", end - start);
         return ResponseEntity.ok(response);
     }
 
