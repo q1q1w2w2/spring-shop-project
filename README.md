@@ -14,7 +14,7 @@
 
 - 사용 기술: 
   - Java
-  - Spring Boot, Spring Security, JPA
+  - Spring Boot, Spring Security, JPA, QueryDSL
   - Mysql, redis
   - AWS(ec2, S3, RDS), Docker
   - postman
