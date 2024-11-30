@@ -1,7 +1,7 @@
 # 스프링 쇼핑몰 프로젝트
 기존 git respository에 yml파일이 올라가있는 것을 확인하여 수정했지만 여전히 커밋에 남아있어 새로운 repository에 업로드하게 되었습니다.
 
-[프로젝트 페이지](https://app.appsmith.com/app/demo2/itemlist-671b34ce899642282b4bd5f4?embed=true)
+프로젝트 페이지: https://app.appsmith.com/app/demo2/itemlist-671b34ce899642282b4bd5f4?embed=true
 
 ## 소개
 1. 등록된 상품 목록을 확인하고 주문할 수 있는 쇼핑몰 서비스입니다.
