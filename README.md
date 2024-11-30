@@ -17,12 +17,9 @@
 - Mysql, redis
 - AWS(ec2, S3, RDS), Docker
 - postman
+
 실제 화면
-이미지이미지이미지이미지이미지이미지이미지이미지
-![1](https://github.com/user-attachments/assets/4139c66d-80e0-4f19-9602-296bb50377e1)
-![상품상세](https://github.com/user-attachments/assets/b58b713f-e892-4274-9ff0-c70245f5fc4c)
-![주문목록](https://github.com/user-attachments/assets/ccdc129c-bf1f-45e4-a35a-443b2d247d77)
-![주문관리](https://github.com/user-attachments/assets/ebacd0f0-121b-44c6-b4ae-4053733c54d7)
+![쇼핑몰소개화면](https://github.com/user-attachments/assets/a7d7b817-dd67-4aa6-aa9e-250de1b6bf51)
 
 
 
