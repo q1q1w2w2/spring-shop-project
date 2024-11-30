@@ -26,6 +26,7 @@
 
 
 ## 아키텍처
+![쇼핑몰프로젝트아키텍처](https://github.com/user-attachments/assets/04b1fd0b-c613-4e3f-ae33-a010b8b5ab9e)
 
 ## ERD 설계
 ![demo2](https://github.com/user-attachments/assets/8c1e6a38-0639-44a0-b6e1-f00ed17a4c88)
