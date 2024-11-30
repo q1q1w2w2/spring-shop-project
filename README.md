@@ -7,18 +7,18 @@
 1. 등록된 상품 목록을 확인하고 주문할 수 있는 쇼핑몰 서비스입니다.
 2. 프로젝트를 통해 개발의 전 과정을 경험해보고자 시작하게 되었습니다.
 
-개발 기간: 2024.09.21 ~ 2024.11.10
+- 개발 기간: 2024.09.21 ~ 2024.11.10
 
-인원: 1명
+- 인원: 1명
 
-사용 기술: 
-- Java
-- Spring Boot, Spring Security, JPA
-- Mysql, redis
-- AWS(ec2, S3, RDS), Docker
-- postman
+- 사용 기술: 
+  - Java
+  - Spring Boot, Spring Security, JPA
+  - Mysql, redis
+  - AWS(ec2, S3, RDS), Docker
+  - postman
 
-실제 화면
+- 실제 화면
 ![쇼핑몰소개화면](https://github.com/user-attachments/assets/a7d7b817-dd67-4aa6-aa9e-250de1b6bf51)
 
 
