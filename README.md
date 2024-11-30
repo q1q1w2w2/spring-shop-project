@@ -20,6 +20,7 @@
   - postman
 
 - 실제 화면
+  
 ![쇼핑몰소개화면](https://github.com/user-attachments/assets/a7d7b817-dd67-4aa6-aa9e-250de1b6bf51)
 
 
