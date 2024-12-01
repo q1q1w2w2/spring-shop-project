@@ -100,4 +100,4 @@
 
 (187ms -> 117ms, 약 40% 개선)
 
-<img src="https://github.com/user-attachments/assets/fa0af6d9-9ac4-4827-a59a-a68e256ddf85" alt="N+1 Join으로 해결한 예시 코드" width="300"/>
+<img src="https://github.com/user-attachments/assets/fa0af6d9-9ac4-4827-a59a-a68e256ddf85" alt="N+1 Join으로 해결한 예시 코드" width="500"/>
