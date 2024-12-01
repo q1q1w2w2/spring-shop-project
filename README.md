@@ -32,12 +32,22 @@
 
 ## 기능 소개
 - 사용자
-  - 회원가입
-    회원가입을 위해 인증번호를 발송하고, 일치하면 회원가입 버튼이 활성화
+  - **회원가입**: 회원가입을 위해 인증번호를 발송하고, 일치하면 회원가입 버튼이 활성화
+    
 ![인증번호발송](https://github.com/user-attachments/assets/d4154b89-7c9c-4868-aec0-741c41f929cd)
 ![인증번호](https://github.com/user-attachments/assets/86192392-86c9-4895-8750-2ba6395f5ef5)
 
-  - 
+  - **로그인**
+
+![로그인](https://github.com/user-attachments/assets/e95d1ce0-eefc-4827-95c1-8cc4674668a5)
+
+  - **상품 목록 및 상품 상세**
+
+![상품목록+상품상세](https://github.com/user-attachments/assets/b9f1eb71-e65d-4649-810a-79e37a82a7fc)
+
+
+
+
 
 - 관리자
   
