@@ -31,7 +31,7 @@
 ![demo2](https://github.com/user-attachments/assets/8c1e6a38-0639-44a0-b6e1-f00ed17a4c88)
 
 ## 기능 소개
-# 사용자
+### 사용자
 - **회원가입**: 회원가입을 위해 인증번호를 발송하고, 일치하면 회원가입 버튼이 활성화
     
 ![인증번호발송](https://github.com/user-attachments/assets/d4154b89-7c9c-4868-aec0-741c41f929cd)
@@ -49,5 +49,5 @@
 
 
 
-- 관리자
+### 관리자
   
