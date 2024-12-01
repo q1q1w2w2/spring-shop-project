@@ -31,7 +31,7 @@
 
 ---
 ## 🔧ERD 설계
-![demo2](https://github.com/user-attachments/assets/8c1e6a38-0639-44a0-b6e1-f00ed17a4c88)
+![demo2](https://github.com/user-attachments/assets/bbbcdb9b-e9b2-4fbc-963c-c928805a9c05)
 
 ---
 ## ⭐기능 소개
