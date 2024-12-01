@@ -66,23 +66,23 @@
 
 
 ### 관리자
-- **상품 등록**
+- **상품 등록**: AWS S3를 사용하여 이미지를 저장하고, S3에 저장된 이미지 url을 상품 정보와 함께 데이터베이스에 저장
 
 ![상품등록](https://github.com/user-attachments/assets/f3b6455e-0944-47bc-8f7e-895b9ac48a95)
 
-- **상품 관리**
+- **상품 관리**: 등록된 상품들을 확인하고, 상품을 삭제할 수 있다.
   
 ![상품관리](https://github.com/user-attachments/assets/cac0a56b-dd56-4467-a8b1-3e95cec36c1c)
 
-- **주문 관리**
+- **주문 관리**: 주문 상태별로 주문 목록을 관리하고, 주문 상태를 변경할 수 있다.
 
 ![주문관리](https://github.com/user-attachments/assets/45c0644e-24da-4a0f-b341-cde71572e32d)
 
-- **후기 관리**
+- **후기 관리**: 사용자들이 작성한 후기를 확인하고, 부적절한 후기를 숨길 수 있다.
 
 ![후기관리](https://github.com/user-attachments/assets/990844d4-444a-45af-b1bb-6e94a948c436)
 
-- **사용자 관리**
+- **사용자 관리**: 사용자들의 정보를 확인할 수 있고, 특정 사용자를 차단할 수 있다.
 
 ![사용자관리](https://github.com/user-attachments/assets/4d4ce6af-5709-4f27-88a8-f095b60f027d)
 
