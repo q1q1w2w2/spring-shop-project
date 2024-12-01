@@ -35,12 +35,16 @@
 ---
 ## ⭐주요 기능
 ### 사용자
-- **회원가입**: 회원가입을 위해 인증번호를 발송하고, 일치하면 회원가입 버튼이 활성화, (SMTP 설명)
+- **회원가입**: 회원가입을 위해 Gmail에서 제공하는 SMTP를 사용하여 인증 메일을 발송하고 redis에 저장, 일치하면 회원가입 버튼이 활성화
+  
+  인증번호는 일시적인 데이터이므로 redis의 TTL을 사용하여 5분 뒤 삭제되도록 설정
     
 ![인증번호발송](https://github.com/user-attachments/assets/d4154b89-7c9c-4868-aec0-741c41f929cd)
 ![인증번호](https://github.com/user-attachments/assets/86192392-86c9-4895-8750-2ba6395f5ef5)
 
-- **로그인**: JWT를 이용한 인증 구현
+- **로그인**: Spring Security + JWT를 이용한 인증 구현
+  
+  서버에 상태를 저장하지 않는 stateless 방식으로, 서버의 부담을 줄이고 확장성을 높이는 데 유리하다는 점에서 JWT를 선택함
 
 ![로그인+비밀번호초기화](https://github.com/user-attachments/assets/2c7a0582-3f88-4c65-85fb-d9c74691b4d2)
 
