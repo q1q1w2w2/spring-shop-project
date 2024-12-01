@@ -1,7 +1,7 @@
 # 스프링 쇼핑몰 프로젝트
 기존 git respository에 yml파일이 올라가있는 것을 확인하여 수정했지만 여전히 커밋에 남아있어 새로운 repository에 업로드하게 되었습니다.
 
-<img src="https://github.com/user-attachments/assets/68838b9b-3f5b-4da2-86c7-44b476747555" alt="이전 repository의 commit" width=500/>
+<img src="https://github.com/user-attachments/assets/91a4aeac-2d25-4b63-80db-f6df11ff6e40" alt="이전 repository의 commit" width=500/>
 
 이메일: jb.lee159@gmail.com
 
