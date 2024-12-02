@@ -41,7 +41,7 @@
   인증번호는 일시적인 데이터이므로 redis의 TTL을 사용하여 5분 뒤 삭제되도록 설정
     
 ![인증번호발송](https://github.com/user-attachments/assets/d4154b89-7c9c-4868-aec0-741c41f929cd)
-![인증번호](https://github.com/user-attachments/assets/86192392-86c9-4895-8750-2ba6395f5ef5)
+<img src="https://github.com/user-attachments/assets/86192392-86c9-4895-8750-2ba6395f5ef5" alt="사용자정보수정" width=500/><br><br><br>
 
 
 - **로그인**: Spring Security + JWT를 이용한 인증 구현
@@ -53,7 +53,8 @@
 
 - **사용자 정보 수정**
 
-![정보수정](https://github.com/user-attachments/assets/489e3527-bc27-4e19-abea-9e92e55fdd2f)
+<img src="https://github.com/user-attachments/assets/489e3527-bc27-4e19-abea-9e92e55fdd2f" alt="사용자정보수정" width=500/><br><br><br>
+
 
 
 - **상품 목록 및 상품 상세**
@@ -63,7 +64,7 @@
 
 - **장바구니**: 장바구니에 담은 상품 목록, 장바구니 내에서 상품제거 및 수량변경 가능
 
-![장바구니](https://github.com/user-attachments/assets/87cc61c6-ccff-4a15-bb3e-14c053a95836)
+<img src="https://github.com/user-attachments/assets/87cc61c6-ccff-4a15-bb3e-14c053a95836" alt="장바구니" width=500/><br><br><br>
 
 
 - **주문 목록 및 후기 작성**: 사용자의 주문 목록, 주문완료 상태에 한해서 주문취소 가능, 배송완료 후 후기작성 가능
@@ -74,27 +75,27 @@
 ### 관리자
 - **상품 등록**: AWS S3를 사용하여 이미지를 저장하고, S3에 저장된 이미지 url을 상품 정보와 함께 데이터베이스에 저장
 
-![상품등록](https://github.com/user-attachments/assets/f3b6455e-0944-47bc-8f7e-895b9ac48a95)
+<img src="https://github.com/user-attachments/assets/f3b6455e-0944-47bc-8f7e-895b9ac48a95" alt="상품등록" width=500/><br><br><br>
 
 
 - **상품 관리**: 등록된 상품들을 확인하고, 상품을 삭제할 수 있다.
   
-![상품관리](https://github.com/user-attachments/assets/cac0a56b-dd56-4467-a8b1-3e95cec36c1c)
+<img src="https://github.com/user-attachments/assets/cac0a56b-dd56-4467-a8b1-3e95cec36c1c" alt="상품관리" width=500/><br><br><br>
 
 
 - **주문 관리**: 주문 상태별로 주문 목록을 관리하고, 주문 상태를 변경할 수 있다.
 
-![주문관리](https://github.com/user-attachments/assets/45c0644e-24da-4a0f-b341-cde71572e32d)
+<img src="https://github.com/user-attachments/assets/45c0644e-24da-4a0f-b341-cde71572e32d" alt="주문관리" width=500/><br><br><br>
 
 
 - **후기 관리**: 사용자들이 작성한 후기를 확인하고, 부적절한 후기를 숨길 수 있다.
 
-![후기관리](https://github.com/user-attachments/assets/990844d4-444a-45af-b1bb-6e94a948c436)
+<img src="https://github.com/user-attachments/assets/990844d4-444a-45af-b1bb-6e94a948c436" alt="후기관리" width=500/><br><br><br>
 
 
 - **사용자 관리**: 사용자들의 정보를 확인할 수 있고, 특정 사용자를 차단할 수 있다.
 
-![사용자관리](https://github.com/user-attachments/assets/4d4ce6af-5709-4f27-88a8-f095b60f027d)
+<img src="https://github.com/user-attachments/assets/4d4ce6af-5709-4f27-88a8-f095b60f027d" alt="사용자관리" width=500/><br><br><br>
 
 
 ---
