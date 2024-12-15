@@ -26,7 +26,7 @@
 
 ---
 ## 🛠아키텍처
-![쇼핑몰프로젝트아키텍처](https://github.com/user-attachments/assets/d9bfa0b0-072b-41ff-86ef-5faf5ad5bf8e)
+![쇼핑몰아키텍처](https://github.com/user-attachments/assets/a0216181-ac3a-4711-91b2-c931630e8e1e)
 
 ---
 ## 🔧ERD 설계
