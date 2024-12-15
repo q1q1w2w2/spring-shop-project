@@ -60,18 +60,6 @@ public class MailSendService {
         mailSend(setFrom, toMail, title, content);
 
         return authCode;
-
-        /*
-        // 인증코드 저장, 이전의 코드 비활성화
-        Optional<List<EmailCode>> codeByEmail = emailCodeRepository.findByEmail(email);
-        if (codeByEmail.isPresent()) {
-            List<EmailCode> emailCodes = codeByEmail.get();
-            for (EmailCode emailCode : emailCodes) {
-                emailCode.setStatus(EMAIL_CODE_DISABLE);
-            }
-        }
-        emailCodeRepository.save(new EmailCode(email, authCode, EMAIL_CODE_ABLE));
-        */
     }
 
     // 이메일 전송
@@ -85,7 +73,7 @@ public class MailSendService {
             helper.setText(content, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new RuntimeException("인증코드 발송에 실패했습니다.");
         }
     }
 
@@ -94,18 +82,4 @@ public class MailSendService {
         String storeAuthCode = redisTemplate.opsForValue().get("authCode:" + email);
         return storeAuthCode != null && storeAuthCode.equals(authCode);
     }
-
-    /*
-    // 인증코드 검증
-    public boolean checkAuthCode(String email, String authCode) {
-        EmailCode emailCode = emailCodeRepository.findByEmailAndStatus(email, EMAIL_CODE_ABLE)
-                .orElseThrow(() -> new RuntimeException("해당 이메일에 대한 인증 코드가 없습니다."));
-
-        if (emailCode.getCode().equals(authCode)) {
-            return true;
-        }
-        return false;
-    }
-    */
-
 }

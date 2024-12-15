@@ -5,15 +5,11 @@ import com.example.demo1.domain.item.Item;
 import com.example.demo1.domain.user.User;
 import com.example.demo1.dto.item.ItemDto;
 import com.example.demo1.dto.item.ItemUpdateDto;
-import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.dto.order.ItemSearch;
-import com.example.demo1.dto.order.OrderResult;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemOwnershipException;
-import com.example.demo1.repository.item.ItemRepository;
 import com.example.demo1.service.user.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -33,7 +28,6 @@ import static org.assertj.core.api.Assertions.*;
 class ItemServiceTest {
 
     @Autowired ItemService itemService;
-    @Autowired ItemRepository itemRepository;
     @Autowired UserService userService;
     @Autowired CategoryService categoryService;
 

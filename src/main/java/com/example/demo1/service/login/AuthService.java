@@ -55,8 +55,15 @@ public class AuthService {
             throw new TokenValidationException("토큰이 유효하지 않습니다.");
         }
         String userId = tokenProvider.extractUserIdFromRefreshToken(refreshToken);
-        redisTemplate.delete("refreshToken:" + userId);
-        log.info("로그아웃 성공");
+        String redisKey = "refreshToken:" + userId;
+
+        Boolean hasKey = redisTemplate.hasKey(redisKey);
+        if (hasKey != null && hasKey) {
+            redisTemplate.delete(redisKey);
+            log.info("로그아웃 성공");
+        } else {
+            throw new TokenValidationException("사용자의 refreshToken이 존재하지 않습니다.");
+        }
     }
     /**
      * ** login 동작 **

@@ -1,17 +1,42 @@
 package com.example.demo1.service.login;
 
+import com.example.demo1.domain.user.User;
+import com.example.demo1.dto.user.JoinDto;
+import com.example.demo1.dto.user.LoginDto;
+import com.example.demo1.exception.token.TokenValidationException;
+import com.example.demo1.service.user.UserService;
+import com.example.demo1.util.jwt.TokenProvider;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class AuthServiceTest {
-/**
+
     @Autowired UserService userService;
     @Autowired AuthService authService;
-    @Autowired RefreshTokenRepository refreshTokenRepository;
-    // @Autowired TokenProvider tokenProvider;
-    @Autowired Auth auth;
+    @Autowired TokenProvider tokenProvider;
 
     private final String LOGIN_ID = "testLoginId";
     private final String LOGIN_PASSWORD = "testPassword";
@@ -34,10 +59,6 @@ class AuthServiceTest {
             assertThat(accessToken).isNotNull();
             assertThat(refreshToken).isNotNull();
 
-            // 토큰 유효성
-//            assertThat(tokenProvider.validateToken(accessToken)).isTrue();
-//            assertThat(tokenProvider.validateToken(refreshToken)).isTrue();
-
             // security context 확인
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             assertThat(authentication).isNotNull();
@@ -54,7 +75,7 @@ class AuthServiceTest {
 
             // when & then
             assertThrows(BadCredentialsException.class,
-                    () -> authService.login(new LoginDto(loginId , password))
+                    () -> authService.login(new LoginDto(loginId, password))
             );
         }
 
@@ -86,19 +107,14 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("로그아웃 성공")
-        void logout_success() {
+        void logout_success() throws Exception {
             // given & when
             authService.logout(accessToken, refreshToken);
-
-            // then
-            RefreshToken findRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> new IllegalStateException("refresh token을 찾을 수 없습니다."));
-            assertThat(findRefreshToken.getExpiredAt()).isNotNull();
         }
 
         @Test
         @DisplayName("로그아웃 실패: 이미 로그아웃 된 사용자")
-        void logout_fail_alreadyLogout() {
+        void logout_fail_alreadyLogout() throws Exception {
             // given
             authService.logout(accessToken, refreshToken); // 첫 번째 로그아웃
 
@@ -114,5 +130,4 @@ class AuthServiceTest {
         JoinDto dto = new JoinDto(name, loginId, password, LocalDate.now(), tel, "서울시", "내집");
         return userService.join(dto);
     }
- */
 }
