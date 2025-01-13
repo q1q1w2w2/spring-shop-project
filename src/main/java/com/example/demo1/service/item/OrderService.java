@@ -15,6 +15,7 @@ import com.example.demo1.exception.order.OrderStepException;
 import com.example.demo1.repository.item.ItemRepository;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.order.OrdersRepository;
+import com.example.demo1.util.constant.OrderStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.demo1.util.constant.Constants.*;
+import static com.example.demo1.util.constant.OrderStep.*;
 
 @Service
 @Slf4j
@@ -108,17 +110,17 @@ public class OrderService {
 
     @Transactional
     public void startOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_STEP_START, "이미 배송이 시작된 주문입니다.");
+        updateStep(ordersIdx, ORDER_START.getValue(), "이미 배송이 시작된 주문입니다.");
     }
 
     @Transactional
     public void completeOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_STEP_COMP, "이미 배송이 완료된 주문입니다.");
+        updateStep(ordersIdx, ORDER_COMP.getValue(), "이미 배송이 완료된 주문입니다.");
     }
 
     @Transactional
     public void cancelOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_STEP_CANCEL, "이미 취소된 주문입니다.");
+        updateStep(ordersIdx, ORDER_CANCEL.getValue(), "이미 취소된 주문입니다.");
     }
 
     private void updateStep(Long ordersIdx, int step, String message) {

@@ -9,6 +9,7 @@ import com.example.demo1.exception.Item.item.ItemCartNotFoundException;
 import com.example.demo1.exception.Item.item.ItemNotFoundException;
 import com.example.demo1.repository.item.ItemCartRepository;
 import com.example.demo1.repository.item.ItemRepository;
+import com.example.demo1.util.constant.CartStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,27 +53,27 @@ public class ItemCartService {
     }
 
     public List<ItemCart> getCart(User user) {
-        return itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD)
+        return itemCartRepository.findByUserAndStatusIsLike(user, CartStatus.CART_ADD.getValue())
                 .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
     }
 
     public void deleteCart(Long cartIdx, User user) {
         ItemCart itemCart = itemCartRepository.findById(cartIdx)
                 .orElseThrow(ItemNotFoundException::new);
-        itemCart.updateStatus(CART_DELETED);
+        itemCart.updateStatus(CartStatus.CART_DELETED.getValue());
     }
 
     public void orderCart(Long itemCartIdx, User user) {
         ItemCart itemCart = itemCartRepository.findById(itemCartIdx)
                 .orElseThrow(ItemNotFoundException::new);
-        itemCart.updateStatus(CART_COMP);
+        itemCart.updateStatus(CartStatus.CART_COMP.getValue());
     }
 
     public void emptyCart(User user) {
-        List<ItemCart> itemCarts = itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD)
+        List<ItemCart> itemCarts = itemCartRepository.findByUserAndStatusIsLike(user, CartStatus.CART_ADD.getValue())
                 .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
         for (ItemCart itemCart : itemCarts) {
-            itemCart.updateStatus(CART_DELETED);
+            itemCart.updateStatus(CartStatus.CART_DELETED.getValue());
         }
     }
 }

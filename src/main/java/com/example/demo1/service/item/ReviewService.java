@@ -11,6 +11,7 @@ import com.example.demo1.exception.Item.review.ReviewNotFoundException;
 import com.example.demo1.exception.order.OrderNotFoundException;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.item.ReviewRepository;
+import com.example.demo1.util.constant.OrderStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class ReviewService {
         if (!orders.getUser().getId().equals(userId)) {
             throw new ReviewNotAllowedException("해당 상품을 주문한 사용자가 아닙니다.");
         }
-        if (orders.getStep() != ORDER_STEP_COMP) {
+        if (orders.getStep() != OrderStep.ORDER_COMP.getValue()) {
             throw new ReviewNotAllowedException("배송 완료 상태에서만 리뷰를 달 수 있습니다.");
         }
         if (orderLog.getReview() == REVIEW_COMP) {
