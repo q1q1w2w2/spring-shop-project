@@ -1,7 +1,7 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
 import com.example.demo1.exception.order.OrderNotFoundException;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.order.OrdersRepository;

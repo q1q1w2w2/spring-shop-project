@@ -1,9 +1,9 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
-import com.example.demo1.domain.item.Review;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
+import com.example.demo1.entity.item.Review;
 import com.example.demo1.dto.order.CreateReviewDto;
 import com.example.demo1.dto.order.ReviewSearch;
 import com.example.demo1.exception.Item.review.ReviewNotAllowedException;
@@ -32,7 +32,6 @@ public class ReviewService {
 
     @Transactional
     public Review saveReview(CreateReviewDto dto, Long userId) {
-
         OrderLog orderLog = orderLogRepository.findById(dto.getOrderLogIdx())
                 .orElseThrow(OrderNotFoundException::new);
 

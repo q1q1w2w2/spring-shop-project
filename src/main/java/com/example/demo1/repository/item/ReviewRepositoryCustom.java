@@ -1,7 +1,7 @@
 package com.example.demo1.repository.item;
 
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.Review;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.Review;
 import com.example.demo1.dto.order.ReviewSearch;
 
 import java.util.List;

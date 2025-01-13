@@ -13,10 +13,9 @@ import java.util.Map;
 @Getter
 @Slf4j
 public class OAuth2Attribute {
-    // OAuth 인증을 통해 얻은 사용자의 정보
 
-    private Map<String, Object> attributes; // 사용자 속성 정보
-    private String nameAttributesKey; // 사용자 속성의 키 값
+    private Map<String, Object> attributes;
+    private String nameAttributesKey;
     private String name;
     private String email;
     private String gender;
@@ -36,8 +35,6 @@ public class OAuth2Attribute {
         this.provider = provider;
     }
 
-    // 서비스에 따라 OAuth2Attribute 객체를 생성하는 메서드
-    // 서비스마다 가져오는 요소나 이름이 다르기 때문
     public static OAuth2Attribute of(String provider, Map<String, Object> attributes) {
         switch (provider) {
             case "google":
@@ -70,9 +67,6 @@ public class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .name(String.valueOf(response.get("name")))
                 .email(String.valueOf(response.get("email")))
-//                .profileImageUrl(String.valueOf(response.get("profile_image_url")))
-//                .ageRange((String) response.get("age"))
-//                .gender((String) response.get("gender"))
                 .attributes(response)
                 .provider(provider)
                 .nameAttributesKey(usernameAttributeName)
@@ -87,8 +81,6 @@ public class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .name(String.valueOf(kakaoProfile.get("nickname")))
                 .email(String.valueOf(kakaoAccount.get("email")))
-//                .gender(String.valueOf(kakaoAccount.get("gender")))
-//                .ageRange(String.valueOf(kakaoAccount.get("age_range")))
                 .profileImageUrl(String.valueOf(kakaoProfile.get("profile_image_url")))
                 .attributes(attributes)
                 .provider(provider)

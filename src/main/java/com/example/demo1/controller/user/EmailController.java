@@ -1,4 +1,4 @@
-package com.example.demo1.web.user;
+package com.example.demo1.controller.user;
 
 import com.example.demo1.dto.user.EmailCodeValidDto;
 import com.example.demo1.dto.user.EmailRequestDto;
@@ -31,7 +31,7 @@ public class EmailController {
     @PostMapping("/api/mailCode/valid")
     public ResponseEntity mailCodeValid(@RequestBody @Valid EmailCodeValidDto dto) {
         boolean isValid = mailService.checkAuthCode(dto.getEmail(), dto.getCode());
-        if (isValid) { // 인증됨
+        if (isValid) {
             return ResponseEntity.ok(Map.of("message", "인증코드가 일치합니다."));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

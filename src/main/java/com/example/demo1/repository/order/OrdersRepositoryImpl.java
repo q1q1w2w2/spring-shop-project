@@ -1,11 +1,10 @@
 package com.example.demo1.repository.order;
 
-import com.example.demo1.domain.item.Orders;
-import com.example.demo1.domain.item.QItem;
-import com.example.demo1.domain.item.QOrderLog;
-import com.example.demo1.domain.item.QOrders;
-import com.example.demo1.domain.user.QUser;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Orders;
+import com.example.demo1.entity.item.QOrderLog;
+import com.example.demo1.entity.item.QOrders;
+import com.example.demo1.entity.user.QUser;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.order.OrderSearch;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;

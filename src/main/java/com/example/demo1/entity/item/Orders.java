@@ -1,6 +1,6 @@
-package com.example.demo1.domain.item;
+package com.example.demo1.entity.item;
 
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

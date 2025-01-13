@@ -1,9 +1,9 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Category;
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.ItemImage;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Category;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.ItemImage;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemDto;
 import com.example.demo1.dto.item.ItemUpdateDto;
 import com.example.demo1.dto.order.ItemSearch;
@@ -17,7 +17,6 @@ import com.example.demo1.repository.item.ItemRepository;
 import com.example.demo1.util.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,7 +111,6 @@ public class ItemService {
                 .orElseThrow(CategoryNotFoundException::new);
     }
 
-    // 상품을 등록한 유저와 현재 로그인 한 유저가 다르면 수정할 수 없음
     private void checkUserOwnership(User user, Item item) {
         if (!item.getUser().equals(user)) {
             throw new ItemOwnershipException();

@@ -1,8 +1,8 @@
 package com.example.demo1.repository.item;
 
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.QCategory;
-import com.example.demo1.domain.item.QItem;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.QCategory;
+import com.example.demo1.entity.item.QItem;
 import com.example.demo1.dto.order.ItemSearch;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;

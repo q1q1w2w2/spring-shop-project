@@ -1,4 +1,4 @@
-package com.example.demo1.web.login;
+package com.example.demo1.controller.login;
 
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.RefreshTokenDto;
@@ -23,7 +23,6 @@ import static com.example.demo1.util.jwt.JwtFilter.*;
 @Slf4j
 public class AuthController {
 
-    private final AuthService loginService;
     private final AuthService authService;
 
     // 로그인 페이지
@@ -35,7 +34,7 @@ public class AuthController {
     // 로그인
     @PostMapping("/api/login")
     public ResponseEntity<Map<String, String>> login(@Validated @RequestBody LoginDto dto) throws Exception {
-        Map<String, String> token = loginService.login(dto);
+        Map<String, String> token = authService.login(dto);
         String accessToken = token.get("accessToken");
         String refreshToken = token.get("refreshToken");
 

@@ -1,8 +1,8 @@
-package com.example.demo1.web.item;
+package com.example.demo1.controller.item;
 
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.order.*;
 import com.example.demo1.service.item.OrderLogService;
 import com.example.demo1.service.item.OrderService;
@@ -30,7 +30,6 @@ public class OrderController {
     private final UserService userService;
     private final OrderLogService orderLogService;
 
-    // 주문 생성
     @PostMapping("/api/order")
     public ResponseEntity<Map> createOrders(@Validated @RequestBody List<CreateOrdersDto> dtoList) {
         User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
@@ -38,7 +37,6 @@ public class OrderController {
         return ResponseEntity.ok(Map.of("message", "주문이 완료되었습니다."));
     }
 
-    // 주문 목록(관리자)
     @GetMapping("/order/list/admin")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<Object>> orderListAdmin(OrderSearch orderSearch) {
@@ -50,13 +48,6 @@ public class OrderController {
         for (Orders order : list) {
             Map<String, Object> orderResponse = new HashMap<>();
             orderResponse.put("orderInfo", new OrderResponseDto(order));
-
-
-//            ArrayList<OrderLogResponseDto> orderLogResponse = new ArrayList<>();
-//            List<OrderLog> orderLogs = order.getOrderLogs();
-//            for (OrderLog orderLog : orderLogs) {
-//                orderLogResponse.add(new OrderLogResponseDto(orderLog));
-//            }
 
             List<Map<String, Object>> orderLogResponse = new ArrayList<>();
 
@@ -75,7 +66,6 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    // 주문 조회(개인)
     @GetMapping("/order/list")
     public ResponseEntity<List<Map<String, Object>>> orderList(OrderSearch orderSearch) {
         User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
@@ -83,7 +73,6 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    // 주문 상세
     @GetMapping("/order/list/{orderIdx}")
     public ResponseEntity<List<OrderLogResponseDto>> orderDetail(@PathVariable Long orderIdx) {
         List<OrderLog> orderLogs = orderLogService.findByOrderIdx(orderIdx);
@@ -95,21 +84,18 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    // 배송 시작 상태
     @PatchMapping("/api/order/start")
     public ResponseEntity<Map> startOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.startOrders(dto.getOrderIdx());
         return ResponseEntity.ok(Map.of("message", "배송 시작 상태로 변경되었습니다."));
     }
 
-    // 배송 완료 상태
     @PatchMapping("/api/order/complete")
     public ResponseEntity<Map> completeOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.completeOrders(dto.getOrderIdx());
         return ResponseEntity.ok(Map.of("message", "배송 완료 상태로 변경되었습니다."));
     }
 
-    // 주문 취소 상태
     @PatchMapping("/api/order/cancel")
     public ResponseEntity<Map> cancelOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.cancelOrders(dto.getOrderIdx());

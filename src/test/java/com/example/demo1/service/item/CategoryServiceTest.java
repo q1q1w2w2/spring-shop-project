@@ -1,14 +1,11 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Category;
-import com.example.demo1.exception.Item.category.CategoryAlreadyExist;
+import com.example.demo1.exception.Item.category.CategoryAlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -42,7 +39,7 @@ class CategoryServiceTest {
 
         // when & then
         assertThatThrownBy(() -> categoryService.save("카테고리1"))
-                .isInstanceOf(CategoryAlreadyExist.class);
+                .isInstanceOf(CategoryAlreadyExistException.class);
     }
 
     @Test

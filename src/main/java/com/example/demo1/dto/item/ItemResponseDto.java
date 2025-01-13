@@ -1,6 +1,6 @@
 package com.example.demo1.dto.item;
 
-import com.example.demo1.domain.item.Item;
+import com.example.demo1.entity.item.Item;
 import lombok.*;
 
 import java.time.LocalDateTime;

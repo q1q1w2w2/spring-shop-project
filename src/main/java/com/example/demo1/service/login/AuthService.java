@@ -18,6 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ** login 동작 **
+ * Dto로 loginId, password를 받음
+ * 받은 정보로 UsernamePasswordAuthenticationToken 생성
+ * authenticationManager로 위의 token을 호출하여 인증 시도
+ * authenticationManager는 내부적으로 UserDetailsService의 loadUserByUsername 호출하여 정보 조회
+ * 사용자가 존재하면 UserDetails 반환, 없다면 UsernameNotFoundException
+ * 요청으로 받은 password와 UserDetails의 password 비교(BadCredentialException)
+ * 성공 시 Authentication 객체 반환
+ * Authentication객체를 SecurityContext에 저장하고 jwt 생성
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -65,16 +76,4 @@ public class AuthService {
             throw new TokenValidationException("사용자의 refreshToken이 존재하지 않습니다.");
         }
     }
-    /**
-     * ** login 동작 **
-     * Dto로 loginId, password를 받음
-     * 받은 정보로 UsernamePasswordAuthenticationToken 생성
-     * authenticationManager로 위의 token을 호출하여 인증 시도
-     * authenticationManager는 내부적으로 UserDetailsService의 loadUserByUsername 호출하여 정보 조회
-     * 사용자가 존재하면 UserDetails 반환, 없다면 UsernameNotFoundException
-     * 요청으로 받은 password와 UserDetails의 password 비교(BadCredentialException)
-     * 성공 시 Authentication 객체 반환
-     * Authentication객체를 SecurityContext에 저장하고 jwt 생성
-     */
-
 }

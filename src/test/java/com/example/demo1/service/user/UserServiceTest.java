@@ -1,10 +1,9 @@
 package com.example.demo1.service.user;
 
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.dto.user.UpdateDto;
 import com.example.demo1.exception.user.UserAlreadyExistException;
-import com.example.demo1.repository.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 

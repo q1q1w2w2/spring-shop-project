@@ -1,6 +1,6 @@
 package com.example.demo1.service.login;
 
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String loginId) {
         // loginId로 user을 찾아서 security.User 객체로 변환하여 반환
+        // loginId가 틀려도 AbstractUserDetailsAuthenticationProvider에서 BadCredentialException으로 변환하여 던짐
         return userRepository.findByLoginId(loginId)
                 .map(user -> createUser(loginId, user))
                 .orElseThrow(() -> new UsernameNotFoundException("[" + loginId + "]를 찾을 수 없습니다"));
-        // loginId가 틀려도 AbstractUserDetailsAuthenticationProvider에서 BadCredentialException으로 변환하여 던짐
     }
 
     private org.springframework.security.core.userdetails.User createUser(String loginId, User user) {

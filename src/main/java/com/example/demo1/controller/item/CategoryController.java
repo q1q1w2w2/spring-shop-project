@@ -1,16 +1,14 @@
-package com.example.demo1.web.item;
+package com.example.demo1.controller.item;
 
-import com.example.demo1.domain.item.Category;
+import com.example.demo1.entity.item.Category;
 import com.example.demo1.dto.item.CategoryRequestDto;
 import com.example.demo1.dto.item.CategoryResponseDto;
 import com.example.demo1.service.item.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,7 +22,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    // 카테고리 목록
     @GetMapping("/api/category")
     public ResponseEntity getAllCategory() {
         List<Object> response = new ArrayList<>();
@@ -35,7 +32,6 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // 카테고리 추가
     @PostMapping("/api/category")
     public ResponseEntity addCategory(@Validated @RequestBody CategoryRequestDto dto) {
         Category category = categoryService.save(dto.getCategoryName());

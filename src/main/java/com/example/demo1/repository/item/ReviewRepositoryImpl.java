@@ -1,6 +1,6 @@
 package com.example.demo1.repository.item;
 
-import com.example.demo1.domain.item.*;
+import com.example.demo1.entity.item.*;
 import com.example.demo1.dto.order.ReviewSearch;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

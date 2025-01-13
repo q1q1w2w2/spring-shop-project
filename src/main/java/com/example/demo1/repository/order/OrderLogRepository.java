@@ -1,7 +1,7 @@
 package com.example.demo1.repository.order;
 
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

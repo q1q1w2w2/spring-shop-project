@@ -1,11 +1,10 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.ItemCart;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.ItemCart;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemCartAddDto;
 import com.example.demo1.dto.item.ItemCartEaUpdateDto;
-import com.example.demo1.dto.item.ItemCartStatusUpdateDto;
 import com.example.demo1.exception.Item.item.ItemCartNotFoundException;
 import com.example.demo1.exception.Item.item.ItemNotFoundException;
 import com.example.demo1.repository.item.ItemCartRepository;
@@ -28,7 +27,6 @@ public class ItemCartService {
     private final ItemRepository itemRepository;
 
     public ItemCart save(ItemCartAddDto dto, User user) {
-        // 이미 있으면 수량 추가
         Optional<ItemCart> findItemCart = itemCartRepository.findByUserIdAndItemIdxAndStatusZero(user.getId(), dto.getItemIdx());
         if (findItemCart.isPresent()) {
             ItemCart itemCart = findItemCart.get();
@@ -47,29 +45,24 @@ public class ItemCartService {
     }
 
     public ItemCart updateEa(ItemCartEaUpdateDto dto, User user) {
-        // 유저검증
-
         ItemCart itemCart = itemCartRepository.findById(dto.getCartIdx())
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateEa(dto.getEa());
         return itemCart;
     }
 
-    // 장바구니 불러오기
     public List<ItemCart> getCart(User user) {
         return itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD)
                 .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
     }
 
     public void deleteCart(Long cartIdx, User user) {
-
         ItemCart itemCart = itemCartRepository.findById(cartIdx)
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateStatus(CART_DELETED);
     }
 
     public void orderCart(Long itemCartIdx, User user) {
-
         ItemCart itemCart = itemCartRepository.findById(itemCartIdx)
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateStatus(CART_COMP);

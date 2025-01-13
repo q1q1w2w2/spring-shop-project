@@ -1,12 +1,10 @@
 package com.example.demo1.dto.order;
 
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
+import com.example.demo1.entity.item.Orders;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

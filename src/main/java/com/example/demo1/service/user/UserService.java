@@ -1,13 +1,12 @@
 package com.example.demo1.service.user;
 
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.UpdateDto;
 import com.example.demo1.exception.user.UserAlreadyExistException;
 import com.example.demo1.exception.user.UserNotFoundException;
 import com.example.demo1.repository.user.UserRepository;
-import com.example.demo1.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 회원가입(일반 사용자)
     @Transactional
     public User join(JoinDto dto) {
 
@@ -56,7 +54,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 회원가입(Admin)
     @Transactional
     public User joinAdmin(JoinDto dto) {
 
@@ -80,7 +77,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 회원가입(OAuth)
     @Transactional
     public User joinOAuth(JoinDto dto) {
 
@@ -98,13 +94,11 @@ public class UserService {
                 .authority("ROLE_USER")
                 .createdAt(LocalDateTime.now().withNano(0))
                 .updatedAt(LocalDateTime.now().withNano(0))
-//                .provider(dto.getProvider())
                 .build();
 
         return userRepository.save(user);
     }
 
-    // 사용자 정보 수정
     @Transactional
     public User update(User user, UpdateDto dto) {
         User.UserBuilder userBuilder = User.builder()
@@ -145,15 +139,12 @@ public class UserService {
         return userRepository.findAllByAuthority("ROLE_USER");
     }
 
-    // 현재 사용자
     public User getCurrentUser(Authentication authentication) {
         return findByLoginId(authentication.getName());
     }
 
-    // 사용자 밴/해제
     @Transactional
     public boolean banOrUnban(User user) {
-        // true: ban / false: unban
         if (user.getBan() == USER_UNBAN) {
             user.banOrUnban(USER_BAN);
             return true;
@@ -163,7 +154,6 @@ public class UserService {
         }
     }
 
-    // 비밀번호 재설정
     @Transactional
     public void updatePassword(LoginDto dto) {
         User user = findByLoginId(dto.getLoginId());

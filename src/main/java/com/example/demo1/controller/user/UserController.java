@@ -1,6 +1,6 @@
-package com.example.demo1.web.user;
+package com.example.demo1.controller.user;
 
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.user.*;
 import com.example.demo1.service.user.MailSendService;
 import com.example.demo1.service.user.UserService;
@@ -27,7 +27,6 @@ public class UserController {
     private final UserService userService;
     private final MailSendService mailService;
 
-    // 회원가입
     @PostMapping("/api/join")
     public ResponseEntity<Map<String, Object>> join(@Validated @RequestBody JoinDto dto) {
         User user = userService.join(dto);
@@ -39,7 +38,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 본인 정보
     @GetMapping("/mypage")
     public ResponseEntity<UserResponseDto> getMyInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -49,7 +47,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 회원 정보 업데이트(본인 정보)
     @PatchMapping("/api/update")
     public ResponseEntity<Map<String, Object>> update(@Validated @RequestBody UpdateDto dto) {
         User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
@@ -62,7 +59,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 전체 유저 정보 출력(admin 제외)
     @GetMapping("/users")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity users() {
@@ -74,7 +70,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 유저 차단(ban)
     @PatchMapping("/user/ban/{userIdx}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity banOrUnbanUser(@PathVariable Long userIdx) {

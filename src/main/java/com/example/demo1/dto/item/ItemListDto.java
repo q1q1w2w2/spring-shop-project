@@ -1,11 +1,10 @@
 package com.example.demo1.dto.item;
 
-import com.example.demo1.domain.item.Item;
+import com.example.demo1.entity.item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

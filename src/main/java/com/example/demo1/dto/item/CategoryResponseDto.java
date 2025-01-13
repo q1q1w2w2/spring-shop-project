@@ -1,6 +1,6 @@
 package com.example.demo1.dto.item;
 
-import com.example.demo1.domain.item.Category;
+import com.example.demo1.entity.item.Category;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,9 +1,9 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.dto.order.OrderResult;
 import com.example.demo1.dto.order.OrderSearch;
@@ -43,21 +43,19 @@ public class OrderService {
         for (CreateOrdersDto dto : dtoList) {
             Item item = itemRepository.findById(dto.getItemIdx())
                     .orElseThrow(ItemNotFoundException::new);
-            // 삭제된 상품 검증
+
             if (item.getState() == DELETED_ITEM_STATE) {
                 throw new ItemAlreadyDeleteException("삭제된 상품이 포함되어 있습니다: " + dto.getItemIdx());
             }
-            // 수량 검증
+
             if (dto.getQuantity() < 1) {
                 throw new InvalidQuantityException("1개 이상의 수량을 입력해야 합니다.");
             }
         }
 
-        // order 생성
         Orders orders = Orders.createOrders(user);
         ordersRepository.save(orders);
 
-        // orderLog 생성
         List<OrderLog> orderLogs = new ArrayList<>();
         for (CreateOrdersDto dto : dtoList) {
             Item item = itemRepository.findById(dto.getItemIdx())
@@ -72,7 +70,6 @@ public class OrderService {
         return new OrderResult(orders, orderLogs);
     }
 
-    // orders 조회
     public List<Orders> findAll(OrderSearch orderSearch) {
         return ordersRepository.findAll(orderSearch);
     }
@@ -84,8 +81,6 @@ public class OrderService {
 
         for (Orders orders : orderList) {
             Map<String, Object> map = new HashMap<>();
-//            List<OrderLog> orderLogs = orderLogRepository.findByOrders(orders)
-//                    .orElseThrow(OrderNotFoundException::new);
             map.put("orderIdx", orders.getIdx());
             map.put("step", orders.getStep());
             map.put("orderTime", orders.getCreatedAt());
@@ -111,7 +106,6 @@ public class OrderService {
         return response;
     }
 
-    // 주문 상태 변경
     @Transactional
     public void startOrders(Long ordersIdx) {
         updateStep(ordersIdx, ORDER_STEP_START, "이미 배송이 시작된 주문입니다.");

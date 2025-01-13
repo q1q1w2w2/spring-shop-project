@@ -1,7 +1,7 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.*;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.*;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemDto;
 import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.dto.order.CreateReviewDto;
@@ -10,7 +10,6 @@ import com.example.demo1.dto.order.ReviewSearch;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.exception.Item.review.ReviewNotAllowedException;
 import com.example.demo1.service.user.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

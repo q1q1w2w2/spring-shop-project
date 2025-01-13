@@ -1,8 +1,8 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Category;
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Category;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemDto;
 import com.example.demo1.dto.item.ItemUpdateDto;
 import com.example.demo1.dto.order.ItemSearch;

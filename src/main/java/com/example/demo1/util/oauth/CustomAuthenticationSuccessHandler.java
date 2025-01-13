@@ -20,25 +20,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    // OAuth 인증 성공 후 처리를 위한 클래스
 
-        private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("[AuthenticationSuccessHandler 실행]");
 
-        // OAuth2User로 캐스팅하여 인증된 사용자 정보를 가져온다.
-//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         OAuth2CustomUser oAuth2User = (OAuth2CustomUser) authentication.getPrincipal();
         log.info(authentication.getPrincipal().toString());
 
-        // 사용자 이메일을 가져온다.
         String email = oAuth2User.getEmail();
-        // 서비스 제공 플랫폼
         String provider = oAuth2User.getName();
 
-        // OAuth2User로 부터 Role을 얻어온다.
         String role = oAuth2User.getAuthorities().stream()
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
@@ -46,7 +40,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         log.info("email: {}, provider: {}, role: {}", email, provider, role);
 
-        // 회원이 존재하면 jwt token 발행을 시작한다.
         String accessToken = null;
         String refreshToken = null;
         try {

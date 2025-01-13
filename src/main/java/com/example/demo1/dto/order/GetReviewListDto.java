@@ -1,6 +1,6 @@
 package com.example.demo1.dto.order;
 
-import com.example.demo1.domain.item.Review;
+import com.example.demo1.entity.item.Review;
 import lombok.Getter;
 import lombok.Setter;
 

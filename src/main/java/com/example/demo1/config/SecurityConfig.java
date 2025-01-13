@@ -32,8 +32,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
-@EnableWebSecurity // spring security 사용
-// prePostEnabled: 메서드에 대한 보안 검사(기본값 true)
+@EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @CrossOrigin(origins = "http://localhost:8081", exposedHeaders = "Authorization")
 public class SecurityConfig {
@@ -50,7 +49,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // AuthenticationManager 를 직접 사용하기 위해 빈으로 등록(authenticate 메서드를 직접 호출하기 위함)
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
@@ -67,8 +65,6 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
 
-                // CORS(Cross-Origin Resource Sharing), 교차 출처 리소스 곻유
-                // 서로 다른 출처일 때의 리소스 요청, 응답을 허용하는 정책
                 .cors(cors ->
                         cors.configurationSource(corsConfigurationSource())
                 )
@@ -92,9 +88,7 @@ public class SecurityConfig {
                 )
 
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // jwt 예외 처리
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
@@ -110,7 +104,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // cors
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -126,7 +119,6 @@ public class SecurityConfig {
         return source;
     }
 
-    // 이 부분에 대해서는 spring security의 필터 체인 자체를 생략(jwtFilter 생략)
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web ->

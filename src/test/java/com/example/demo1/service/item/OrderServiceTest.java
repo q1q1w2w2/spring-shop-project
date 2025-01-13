@@ -1,14 +1,13 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Category;
-import com.example.demo1.domain.item.Item;
-import com.example.demo1.domain.item.OrderLog;
-import com.example.demo1.domain.item.Orders;
-import com.example.demo1.domain.user.User;
+import com.example.demo1.entity.item.Category;
+import com.example.demo1.entity.item.Item;
+import com.example.demo1.entity.item.OrderLog;
+import com.example.demo1.entity.item.Orders;
+import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemDto;
 import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.dto.order.OrderResult;
-import com.example.demo1.dto.order.OrderSearch;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemNotFoundException;

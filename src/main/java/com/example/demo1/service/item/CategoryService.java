@@ -1,8 +1,7 @@
 package com.example.demo1.service.item;
 
-import com.example.demo1.domain.item.Category;
-import com.example.demo1.dto.item.CategoryResponseDto;
-import com.example.demo1.exception.Item.category.CategoryAlreadyExist;
+import com.example.demo1.entity.item.Category;
+import com.example.demo1.exception.Item.category.CategoryAlreadyExistException;
 import com.example.demo1.repository.item.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public Category save(String categoryName) {
-        // 카테고리명 중복검사
         if (categoryRepository.existsByCategoryName(categoryName)) {
-            throw new CategoryAlreadyExist();
+            throw new CategoryAlreadyExistException();
         }
 
         Category category = new Category(

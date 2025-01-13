@@ -1,7 +1,7 @@
 package com.example.demo1.exception;
 
 import com.example.demo1.dto.ErrorResponseDto;
-import com.example.demo1.exception.Item.category.CategoryAlreadyExist;
+import com.example.demo1.exception.Item.category.CategoryAlreadyExistException;
 import com.example.demo1.exception.Item.category.CategoryNotFoundException;
 import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemCartNotFoundException;
@@ -111,8 +111,8 @@ public class GlobalExceptionHandler {
         return createErrorResponse(e, BAD_REQUEST, "카테고리를 찾을 수 없습니다.");
     }
 
-    @ExceptionHandler(CategoryAlreadyExist.class)
-    public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExist(CategoryAlreadyExist e) {
+    @ExceptionHandler(CategoryAlreadyExistException.class)
+    public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExist(CategoryAlreadyExistException e) {
         return createErrorResponse(e, CONFLICT, "이미 존재하는 카테고리입니다.");
     }
 

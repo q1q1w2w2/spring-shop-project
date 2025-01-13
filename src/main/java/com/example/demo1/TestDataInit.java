@@ -1,13 +1,12 @@
 package com.example.demo1;
 
-import com.example.demo1.domain.item.Category;
+import com.example.demo1.entity.item.Category;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.service.item.ItemService;
 import com.example.demo1.service.user.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

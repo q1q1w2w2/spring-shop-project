@@ -1,11 +1,10 @@
 package com.example.demo1.dto.order;
 
-import com.example.demo1.domain.item.ItemImage;
-import com.example.demo1.domain.item.OrderLog;
+import com.example.demo1.entity.item.ItemImage;
+import com.example.demo1.entity.item.OrderLog;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
