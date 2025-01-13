@@ -1,7 +1,4 @@
 # 스프링 쇼핑몰 프로젝트
-기존 git respository에 yml파일이 올라가있는 것을 확인하여 수정했지만 여전히 커밋에 남아있어 새로운 repository에 업로드하게 되었습니다.
-
-<img src="https://github.com/user-attachments/assets/91a4aeac-2d25-4b63-80db-f6df11ff6e40" alt="이전 repository의 commit" width=500/>
 
 이메일: jb.lee159@gmail.com
 
@@ -26,7 +23,7 @@
 
 ---
 ## 🛠아키텍처
-![쇼핑몰프로젝트아키텍처](https://github.com/user-attachments/assets/d9bfa0b0-072b-41ff-86ef-5faf5ad5bf8e)
+![쇼핑몰아키텍처](https://github.com/user-attachments/assets/a0216181-ac3a-4711-91b2-c931630e8e1e)
 
 ---
 ## 🔧ERD 설계
