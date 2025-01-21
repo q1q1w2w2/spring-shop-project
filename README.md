@@ -17,7 +17,7 @@
 - 사용 기술: 
   - Java
   - Spring Boot, Spring Security, JPA, QueryDSL
-  - Mysql, redis
+  - Mysql, Redis
   - AWS(ec2, S3, RDS), Docker
   - postman
 
@@ -31,7 +31,7 @@
 
 
 ---
-## 💥트러블 슈팅
+## 💥주요 문제 상황 및 해결
 
 ### 1. 쿼리 및 성능 개선
 
