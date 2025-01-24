@@ -1,8 +1,10 @@
 package com.example.demo1.service.login;
 
+import com.example.demo1.dto.auth.TokensDto;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.exception.token.TokenValidationException;
 import com.example.demo1.service.user.UserService;
+import com.example.demo1.util.constant.Role;
 import com.example.demo1.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.demo1.util.constant.Role.*;
 
 /**
  * ** login 동작 **
@@ -39,11 +43,10 @@ public class AuthService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public Map<String, String> login(LoginDto dto) throws Exception {
+    public TokensDto login(LoginDto dto) throws Exception {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(dto.getLoginId(), dto.getPassword());
 
-        // authenticationManger 내부적으로 UserDetailsService 호출
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -52,12 +55,12 @@ public class AuthService {
         String authority = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
-                .orElse("ROLE_USER");
+                .orElse(ROLE_USER.toString());
 
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("refreshToken", tokenProvider.createRefreshToken(subject));
-        tokens.put("accessToken", tokenProvider.createAccessToken(subject, authority));
-        return tokens;
+        String accessToken = tokenProvider.createAccessToken(subject, authority);
+        String refreshToken = tokenProvider.createRefreshToken(subject);
+
+        return new TokensDto(accessToken, refreshToken);
     }
 
     @Transactional

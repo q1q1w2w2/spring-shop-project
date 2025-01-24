@@ -1,10 +1,13 @@
 package com.example.demo1.controller.login;
 
+import com.example.demo1.dto.auth.TokensDto;
+import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.RefreshTokenDto;
 import com.example.demo1.service.login.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.demo1.util.jwt.JwtFilter.*;
+import static org.springframework.http.HttpStatus.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,21 +35,16 @@ public class AuthController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<Map<String, String>> login(@Validated @RequestBody LoginDto dto) throws Exception {
-        Map<String, String> token = authService.login(dto);
-        String accessToken = token.get("accessToken");
-        String refreshToken = token.get("refreshToken");
+    public ResponseEntity<ApiResponse<TokensDto>> login(@Validated @RequestBody LoginDto dto) throws Exception {
+        TokensDto tokens = authService.login(dto);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("accessToken", accessToken);
-        response.put("refreshToken", refreshToken);
-
+        ApiResponse<TokensDto> response = ApiResponse.success(OK, "로그인 되었습니다.", tokens);
         return ResponseEntity.ok(response);
     }
 
     // 로그아웃
     @PostMapping("/api/logout")
-    public ResponseEntity<Map> logout(
+    public ResponseEntity<ApiResponse<Object>> logout(
             @RequestHeader(AUTHORIZATION_HEADER) String authorization,
             @Validated @RequestBody RefreshTokenDto dto
     ) throws Exception {
@@ -53,6 +52,8 @@ public class AuthController {
         String accessToken = authorization.substring(TOKEN_PREFIX.length());
 
         authService.logout(refreshToken, accessToken);
-        return ResponseEntity.ok(Map.of("message", "로그아웃 되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "로그아웃 되었습니다.");
+        return ResponseEntity.ok(response);
     }
 }

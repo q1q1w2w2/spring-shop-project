@@ -2,6 +2,7 @@ package com.example.demo1.util.jwt;
 
 import com.example.demo1.service.login.CustomUserDetailsService;
 import com.example.demo1.util.aes.AesUtil;
+import com.example.demo1.util.constant.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -64,7 +65,7 @@ public class TokenProvider implements InitializingBean {
 
     public String createRefreshToken(String subject) throws Exception {
         String encryptSubject = AesUtil.encrypt(subject, claimKey);
-        String encryptAuthority = AesUtil.encrypt("ROLE_USER", claimKey);
+        String encryptAuthority = AesUtil.encrypt(Role.ROLE_USER.toString(), claimKey);
         String refreshToken = createToken(encryptSubject, encryptAuthority, refreshTokenExpireTime);
 
         redisTemplate.opsForValue().set("refreshToken:" + subject, refreshToken);

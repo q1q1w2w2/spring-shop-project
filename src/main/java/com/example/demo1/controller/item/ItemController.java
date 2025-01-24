@@ -1,5 +1,6 @@
 package com.example.demo1.controller.item;
 
+import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.ItemImage;
 import com.example.demo1.entity.user.User;
@@ -10,6 +11,7 @@ import com.example.demo1.service.item.ItemService;
 import com.example.demo1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -31,11 +35,11 @@ public class ItemController {
     private final ItemImageService itemImageService;
 
     @PostMapping("/api/item/save")
-    public ResponseEntity<ItemResponseDto> saveItem(
+    public ResponseEntity<ApiResponse<ItemResponseDto>> saveItem(
             @Validated @RequestPart(value = "item") ItemDto itemDto,
             @RequestPart(value = "image", required = false) List<MultipartFile> images
     ) {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+        User user = userService.getCurrentUser();
 
         Map<String, Object> saveInfo = itemService.save(itemDto, images, user);
         Item item = (Item) saveInfo.get("item");
@@ -46,13 +50,12 @@ public class ItemController {
             imageUrls.add(itemImage.getImageUrl());
         }
 
-        ItemResponseDto response = new ItemResponseDto(item, imageUrls);
-
+        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(item, imageUrls));
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/api/item/update")
-    public ResponseEntity<ItemResponseDto> updateItem(
+    public ResponseEntity<ApiResponse<ItemResponseDto>> updateItem(
             @Validated @RequestPart ItemUpdateDto itemUpdateDto,
             @RequestPart(value = "addImage", required = false) List<MultipartFile> addImage,
             @RequestPart(value = "deleteImageSeq", required = false) List<Integer> deleteImageSeq,
@@ -77,19 +80,19 @@ public class ItemController {
         }
 
         List<ItemImage> itemImages = itemImageService.findActivateImageByItem(updateItem);
-        ArrayList<String> imageUrlList = new ArrayList<>();
+        List<String> imageUrlList = new ArrayList<>();
         for (ItemImage itemImage : itemImages) {
             imageUrlList.add(itemImage.getImageUrl());
         }
 
-        ItemResponseDto response = new ItemResponseDto(updateItem, imageUrlList);
+        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(updateItem, imageUrlList));
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/item/list")
-    public ResponseEntity<List<ItemListDto>> getAllItems(@ModelAttribute ItemSearch itemSearch) {
+    public ResponseEntity<ApiResponse<List<ItemListDto>>> getAllItems(@ModelAttribute ItemSearch itemSearch) {
         List<Item> itemList = itemService.findAll(itemSearch);
-        List<ItemListDto> response = new ArrayList<>();
+        List<ItemListDto> itemListDto = new ArrayList<>();
 
         for (Item item : itemList) {
             List<String> imageUrls = new ArrayList<>();
@@ -99,15 +102,15 @@ public class ItemController {
                 imageUrls.add(image.getImageUrl());
             }
 
-            response.add(new ItemListDto(item, imageUrls));
+            itemListDto.add(new ItemListDto(item, imageUrls));
         }
 
-        log.info("상품 목록 조회 성공");
+        ApiResponse<List<ItemListDto>> response = ApiResponse.success(OK, itemListDto);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/item")
-    public ResponseEntity<ItemResponseDto> itemDetail(@RequestParam Long itemIdx) {
+    public ResponseEntity<ApiResponse<ItemResponseDto>> itemDetail(@RequestParam Long itemIdx) {
         Item item = itemService.findByIdx(itemIdx);
         List<ItemImage> itemImages = itemImageService.findActivateImageByItem(item);
 
@@ -116,16 +119,17 @@ public class ItemController {
             imageUrls.add(itemImage.getImageUrl());
         }
 
-        ItemResponseDto response = new ItemResponseDto(item, imageUrls);
-        log.info("상품 상세 조회 성공");
+        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(item, imageUrls));
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/api/item/delete")
-    public ResponseEntity deleteItem(@RequestBody ItemRequestDto dto) {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+    public ResponseEntity<ApiResponse<Object>> deleteItem(@RequestBody ItemRequestDto dto) {
+        User user = userService.getCurrentUser();
         itemService.delete(dto.getItemIdx(), user);
-        return ResponseEntity.ok(Map.of("message", "상품이 삭제되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "상품이 삭제되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
 }

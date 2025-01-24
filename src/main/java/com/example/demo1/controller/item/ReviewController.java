@@ -1,5 +1,6 @@
 package com.example.demo1.controller.item;
 
+import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.Review;
 import com.example.demo1.entity.user.User;
@@ -13,6 +14,7 @@ import com.example.demo1.service.item.ReviewService;
 import com.example.demo1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -34,54 +38,56 @@ public class ReviewController {
     private final ItemService itemService;
 
     @PostMapping("/api/item/review")
-    public ResponseEntity<ReviewResponseDto> createReview(@Validated @RequestBody CreateReviewDto dto) {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> createReview(@Validated @RequestBody CreateReviewDto dto) {
+        User user = userService.getCurrentUser();
         Review review = reviewService.saveReview(dto, user.getId());
 
-        ReviewResponseDto response = new ReviewResponseDto(review);
-
+        ApiResponse<ReviewResponseDto> response = ApiResponse.success(OK, new ReviewResponseDto(review));
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/item/review/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity getReview(@ModelAttribute ReviewSearch reviewSearch) {
+    public ResponseEntity<ApiResponse<List<Object>>> getReview(@ModelAttribute ReviewSearch reviewSearch) {
         List<Review> reviewList = reviewService.getReview(reviewSearch);
-        ArrayList<Object> list = new ArrayList<>();
+        List<Object> reviewDtoList = new ArrayList<>();
         for (Review review : reviewList) {
-            GetReviewListDto dto = new GetReviewListDto(review);
-            list.add(dto);
+            reviewDtoList.add(new GetReviewListDto(review));
         }
-        return ResponseEntity.ok(list);
+
+        ApiResponse<List<Object>> response = ApiResponse.success(OK, reviewDtoList);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/item/review")
     public ResponseEntity getItemReview(@Validated @RequestBody ItemRequestDto dto) {
         Item item = itemService.findByIdx(dto.getItemIdx());
         List<Review> reviewList = reviewService.getReviewByItemIdx(item);
-        ArrayList<Object> list = new ArrayList<>();
+        List<Object> reviewDtoList = new ArrayList<>();
         for (Review review : reviewList) {
             GetReviewListDto reviewListDto = new GetReviewListDto(review);
-            list.add(reviewListDto);
+            reviewDtoList.add(reviewListDto);
         }
-        return ResponseEntity.ok(list);
+
+        ApiResponse<List<Object>> response = ApiResponse.success(OK, reviewDtoList);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/item/review/blind")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity reviewBlind(
-            @RequestParam Long reviewIdx
-    ) {
+    public ResponseEntity reviewBlind(@RequestParam Long reviewIdx) {
         reviewService.blindReview(reviewIdx);
-        return ResponseEntity.ok(Map.of("message", "후기를 차단했습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "후기를 차단했습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/item/review/blind/cancel")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity reviewBlindCancel(
-            @RequestParam Long reviewIdx
-    ) {
+    public ResponseEntity reviewBlindCancel(@RequestParam Long reviewIdx) {
         reviewService.blindReviewCancel(reviewIdx);
-        return ResponseEntity.ok(Map.of("message", "차단을 해제했습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "차단을 해제했습니다.");
+        return ResponseEntity.ok(response);
     }
 }

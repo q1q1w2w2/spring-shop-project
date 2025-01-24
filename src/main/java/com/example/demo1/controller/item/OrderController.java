@@ -1,5 +1,6 @@
 package com.example.demo1.controller.item;
 
+import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.entity.item.OrderLog;
 import com.example.demo1.entity.item.Orders;
 import com.example.demo1.entity.user.User;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Controller
 @Slf4j
@@ -31,19 +33,19 @@ public class OrderController {
     private final OrderLogService orderLogService;
 
     @PostMapping("/api/order")
-    public ResponseEntity<Map> createOrders(@Validated @RequestBody List<CreateOrdersDto> dtoList) {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+    public ResponseEntity<ApiResponse<Object>> createOrders(@Validated @RequestBody List<CreateOrdersDto> dtoList) {
+        User user = userService.getCurrentUser();
         orderService.saveOrders(user, dtoList);
-        return ResponseEntity.ok(Map.of("message", "주문이 완료되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "주문이 완료되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/order/list/admin")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Object>> orderListAdmin(OrderSearch orderSearch) {
-        long start = System.currentTimeMillis();
-
+    public ResponseEntity<ApiResponse<Object>> orderListAdmin(OrderSearch orderSearch) {
         List<Orders> list = orderService.findAll(orderSearch);
-        List<Object> response = new ArrayList<>();
+        List<Object> orderList = new ArrayList<>();
 
         for (Orders order : list) {
             Map<String, Object> orderResponse = new HashMap<>();
@@ -59,46 +61,55 @@ public class OrderController {
                 orderLogResponse.add(map);
             }
             orderResponse.put("orderLogs", orderLogResponse);
-            response.add(orderResponse);
+            orderList.add(orderResponse);
         }
-        long end = System.currentTimeMillis();
-        log.info("response time: {} ms", end - start);
+
+        ApiResponse<Object> response = ApiResponse.success(OK, orderList);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/order/list")
-    public ResponseEntity<List<Map<String, Object>>> orderList(OrderSearch orderSearch) {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
-        List<Map<String, Object>> response = orderService.findAll(orderSearch, user);
+    public ResponseEntity<ApiResponse<Object>> orderList(OrderSearch orderSearch) {
+        User user = userService.getCurrentUser();
+        List<Map<String, Object>> orderList = orderService.findAll(orderSearch, user);
+
+        ApiResponse<Object> response = ApiResponse.success(OK, orderList);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/order/list/{orderIdx}")
-    public ResponseEntity<List<OrderLogResponseDto>> orderDetail(@PathVariable Long orderIdx) {
+    public ResponseEntity<ApiResponse<List<OrderLogResponseDto>>> orderDetail(@PathVariable Long orderIdx) {
         List<OrderLog> orderLogs = orderLogService.findByOrderIdx(orderIdx);
-        List<OrderLogResponseDto> response = new ArrayList<>();
+        List<OrderLogResponseDto> orderLogDtoList = new ArrayList<>();
         for (OrderLog orderLog : orderLogs) {
-            response.add(new OrderLogResponseDto(orderLog));
-
+            orderLogDtoList.add(new OrderLogResponseDto(orderLog));
         }
+
+        ApiResponse<List<OrderLogResponseDto>> response = ApiResponse.success(OK, orderLogDtoList);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/api/order/start")
-    public ResponseEntity<Map> startOrder(@Validated @RequestBody OrderRequestDto dto) {
+    public ResponseEntity<ApiResponse<Object>> startOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.startOrders(dto.getOrderIdx());
-        return ResponseEntity.ok(Map.of("message", "배송 시작 상태로 변경되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "배송 시작 상태로 변경되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/api/order/complete")
-    public ResponseEntity<Map> completeOrder(@Validated @RequestBody OrderRequestDto dto) {
+    public ResponseEntity<ApiResponse<Object>> completeOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.completeOrders(dto.getOrderIdx());
-        return ResponseEntity.ok(Map.of("message", "배송 완료 상태로 변경되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "배송 완료 상태로 변경되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/api/order/cancel")
-    public ResponseEntity<Map> cancelOrder(@Validated @RequestBody OrderRequestDto dto) {
+    public ResponseEntity<ApiResponse<Object>> cancelOrder(@Validated @RequestBody OrderRequestDto dto) {
         orderService.cancelOrders(dto.getOrderIdx());
-        return ResponseEntity.ok(Map.of("message", "주문이 취소되었습니다."));
+
+        ApiResponse<Object> response = ApiResponse.success(OK, "주문이 취소되었습니다.");
+        return ResponseEntity.ok(response);
     }
 }
