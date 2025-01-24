@@ -73,8 +73,6 @@ public class TokenProvider implements InitializingBean {
     }
 
     public String createNewAccessToken(String refreshToken) throws Exception {
-        // refresh token의 subject로 userDetails찾아서 거기서 권한을 가져옴
-        // 그래서 createRefreshToken으로 만들어진 refresh token의 권한이 상관없음 -> 애초에 refresh token에 subject만 포함되면 됨
         String authority = getAuthorityFromRefreshToken(refreshToken);
         String subject = extractUserIdFromRefreshToken(refreshToken);
         return createAccessToken(subject, authority);

@@ -25,13 +25,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // 로그인 페이지
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
-    // 로그인
     @PostMapping("/api/login")
     public ResponseEntity<Map<String, String>> login(@Validated @RequestBody LoginDto dto) throws Exception {
         Map<String, String> token = authService.login(dto);

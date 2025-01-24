@@ -89,7 +89,7 @@ public class UserController {
      */
     @PostMapping("/api/user/sendMail")
     public ResponseEntity sendMailForPasswordReset(@RequestBody EmailRequestDto dto) {
-        userService.findByLoginId(dto.getLoginId()); // 없으면 예외발생
+        userService.findByLoginId(dto.getLoginId());
         mailService.sendMailForPasswordReset(dto.getLoginId());
         return ResponseEntity.ok(Map.of("message", "인증 코드를 발송했습니다."));
     }
