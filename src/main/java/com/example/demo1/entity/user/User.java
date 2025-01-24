@@ -49,9 +49,6 @@ public class User {
     @Column(name = "ban")
     private int ban;
 
-//    @Column(name = "provider")
-//    private String provider;
-
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 

@@ -7,6 +7,7 @@ import com.example.demo1.dto.user.UpdateDto;
 import com.example.demo1.exception.user.UserAlreadyExistException;
 import com.example.demo1.exception.user.UserNotFoundException;
 import com.example.demo1.repository.user.UserRepository;
+import com.example.demo1.util.constant.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.demo1.util.constant.Constants.*;
+import static com.example.demo1.util.constant.Role.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,6 @@ public class UserService {
 
     @Transactional
     public User join(JoinDto dto) {
-
         if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
         }
@@ -46,7 +47,7 @@ public class UserService {
                 .detail(dto.getDetail())
                 .loginId(dto.getLoginId())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .authority("ROLE_USER")
+                .authority(ROLE_USER.toString())
                 .createdAt(LocalDateTime.now().withNano(0))
                 .updatedAt(LocalDateTime.now().withNano(0))
                 .build();
@@ -56,7 +57,6 @@ public class UserService {
 
     @Transactional
     public User joinAdmin(JoinDto dto) {
-
         if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
         }
@@ -69,7 +69,7 @@ public class UserService {
                 .detail(dto.getDetail())
                 .loginId(dto.getLoginId())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .authority("ROLE_ADMIN")
+                .authority(ROLE_ADMIN.toString())
                 .createdAt(LocalDateTime.now().withNano(0))
                 .updatedAt(LocalDateTime.now().withNano(0))
                 .build();
@@ -79,7 +79,6 @@ public class UserService {
 
     @Transactional
     public User joinOAuth(JoinDto dto) {
-
         if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
         }
@@ -91,7 +90,7 @@ public class UserService {
                 .address(dto.getAddress())
                 .detail(dto.getDetail())
                 .loginId(dto.getLoginId())
-                .authority("ROLE_USER")
+                .authority(ROLE_USER.toString())
                 .createdAt(LocalDateTime.now().withNano(0))
                 .updatedAt(LocalDateTime.now().withNano(0))
                 .build();
@@ -136,7 +135,7 @@ public class UserService {
     }
 
     public List<User> findAllUser() {
-        return userRepository.findAllByAuthority("ROLE_USER");
+        return userRepository.findAllByAuthority(ROLE_USER.toString());
     }
 
     public User getCurrentUser(Authentication authentication) {
