@@ -42,6 +42,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final RedisTemplate<String, String> redisTemplate;
 
+    private final String REDIS_KEY_PREFIX = "refreshToken:";
+
     @Transactional
     public TokensDto login(LoginDto dto) throws Exception {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -69,14 +71,14 @@ public class AuthService {
             throw new TokenValidationException("토큰이 유효하지 않습니다.");
         }
         String userId = tokenProvider.extractUserIdFromRefreshToken(refreshToken);
-        String redisKey = "refreshToken:" + userId;
+        String redisKey = REDIS_KEY_PREFIX + userId;
 
         Boolean hasKey = redisTemplate.hasKey(redisKey);
         if (hasKey != null && hasKey) {
             redisTemplate.delete(redisKey);
             log.info("로그아웃 성공");
         } else {
-            throw new TokenValidationException("사용자의 refreshToken이 존재하지 않습니다.");
+            throw new TokenValidationException("토큰이 존재하지 않습니다.");
         }
     }
 }

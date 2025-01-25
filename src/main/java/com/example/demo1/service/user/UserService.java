@@ -33,70 +33,59 @@ public class UserService {
 
     @Transactional
     public User join(JoinDto dto) {
+        return joinUser(dto, ROLE_USER);
+    }
+
+    @Transactional
+    public User joinAdmin(JoinDto dto) {
+        return joinUser(dto, ROLE_ADMIN);
+    }
+
+    @Transactional
+    public User joinOAuth(JoinDto dto) {
+        checkUserExistence(dto);
+
+        User user = User.builder()
+                .username(dto.getUsername())
+                .birth(dto.getBirth())
+                .tel(dto.getTel())
+                .address(dto.getAddress())
+                .detail(dto.getDetail())
+                .loginId(dto.getLoginId())
+                .authority(ROLE_USER.toString())
+                .createdAt(LocalDateTime.now().withNano(0))
+                .updatedAt(LocalDateTime.now().withNano(0))
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private User joinUser(JoinDto dto, Role role) {
+        checkUserExistence(dto);
+
+        User user = User.builder()
+                .username(dto.getUsername())
+                .birth(dto.getBirth())
+                .tel(dto.getTel())
+                .address(dto.getAddress())
+                .detail(dto.getDetail())
+                .loginId(dto.getLoginId())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .authority(role.toString())
+                .createdAt(LocalDateTime.now().withNano(0))
+                .updatedAt(LocalDateTime.now().withNano(0))
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private void checkUserExistence(JoinDto dto) {
         if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
         }
         if (userRepository.findByTel(dto.getTel()).isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 전화번호입니다.");
         }
-
-        User user = User.builder()
-                .username(dto.getUsername())
-                .birth(dto.getBirth())
-                .tel(dto.getTel())
-                .address(dto.getAddress())
-                .detail(dto.getDetail())
-                .loginId(dto.getLoginId())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .authority(ROLE_USER.toString())
-                .createdAt(LocalDateTime.now().withNano(0))
-                .updatedAt(LocalDateTime.now().withNano(0))
-                .build();
-
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    public User joinAdmin(JoinDto dto) {
-        if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
-            throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
-        }
-
-        User user = User.builder()
-                .username(dto.getUsername())
-                .birth(dto.getBirth())
-                .tel(dto.getTel())
-                .address(dto.getAddress())
-                .detail(dto.getDetail())
-                .loginId(dto.getLoginId())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .authority(ROLE_ADMIN.toString())
-                .createdAt(LocalDateTime.now().withNano(0))
-                .updatedAt(LocalDateTime.now().withNano(0))
-                .build();
-
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    public User joinOAuth(JoinDto dto) {
-        if (userRepository.findByLoginId(dto.getLoginId()).isPresent()) {
-            throw new UserAlreadyExistException("이미 존재하는 아이디입니다.");
-        }
-
-        User user = User.builder()
-                .username(dto.getUsername())
-                .birth(dto.getBirth())
-                .tel(dto.getTel())
-                .address(dto.getAddress())
-                .detail(dto.getDetail())
-                .loginId(dto.getLoginId())
-                .authority(ROLE_USER.toString())
-                .createdAt(LocalDateTime.now().withNano(0))
-                .updatedAt(LocalDateTime.now().withNano(0))
-                .build();
-
-        return userRepository.save(user);
     }
 
     @Transactional
