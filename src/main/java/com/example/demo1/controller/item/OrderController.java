@@ -43,37 +43,30 @@ public class OrderController {
 
     @GetMapping("/order/list/admin")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<Object>> orderListAdmin(OrderSearch orderSearch) {
-        List<Orders> list = orderService.findAll(orderSearch);
-        List<Object> orderList = new ArrayList<>();
+    public ResponseEntity<ApiResponse<OrderListResponseDto>> orderListAdmin(OrderSearch orderSearch) {
+        OrderListResponseDto orderListResponseDto = new OrderListResponseDto();
 
-        for (Orders order : list) {
-            Map<String, Object> orderResponse = new HashMap<>();
-            orderResponse.put("orderInfo", new OrderResponseDto(order));
+        List<Orders> orders = orderService.findAll(orderSearch);
+        for (Orders order : orders) {
+            orderListResponseDto.setOrderInfo(new OrderResponseDto(order));
 
-            List<Map<String, Object>> orderLogResponse = new ArrayList<>();
-
+            List<OrderLogDetailDto> orderLogResponse = new ArrayList<>();
             for (OrderLog orderLog : order.getOrderLogs()) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("itemIdx", orderLog.getItem().getIdx());
-                map.put("itemName", orderLog.getItem().getItemName());
-                map.put("ea", orderLog.getEa());
-                orderLogResponse.add(map);
+                orderLogResponse.add(new OrderLogDetailDto(orderLog));
             }
-            orderResponse.put("orderLogs", orderLogResponse);
-            orderList.add(orderResponse);
+            orderListResponseDto.setOrderLogs(orderLogResponse);
         }
 
-        ApiResponse<Object> response = ApiResponse.success(OK, orderList);
+        ApiResponse<OrderListResponseDto> response = ApiResponse.success(OK, orderListResponseDto);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/order/list")
     public ResponseEntity<ApiResponse<Object>> orderList(OrderSearch orderSearch) {
         User user = userService.getCurrentUser();
-        List<Map<String, Object>> orderList = orderService.findAll(orderSearch, user);
+        List<OrderDetailForPersonal> orders = orderService.findAll(orderSearch, user);
 
-        ApiResponse<Object> response = ApiResponse.success(OK, orderList);
+        ApiResponse<Object> response = ApiResponse.success(OK, orders);
         return ResponseEntity.ok(response);
     }
 

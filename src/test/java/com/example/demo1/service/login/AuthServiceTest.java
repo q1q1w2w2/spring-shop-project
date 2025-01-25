@@ -1,5 +1,6 @@
 package com.example.demo1.service.login;
 
+import com.example.demo1.dto.auth.TokensDto;
 import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.dto.user.LoginDto;
@@ -48,9 +49,9 @@ class AuthServiceTest {
             createUser("kim", LOGIN_ID, LOGIN_PASSWORD, "010-0000-0001");
 
             // when
-            Map<String, String> tokens = authService.login(new LoginDto(LOGIN_ID, LOGIN_PASSWORD));
-            String accessToken = tokens.get("accessToken");
-            String refreshToken = tokens.get("refreshToken");
+            TokensDto tokens = authService.login(new LoginDto(LOGIN_ID, LOGIN_PASSWORD));
+            String accessToken = tokens.getAccessToken();
+            String refreshToken = tokens.getRefreshToken();
 
             // then
             assertThat(accessToken).isNotNull();
@@ -97,9 +98,9 @@ class AuthServiceTest {
             createUser("kim", LOGIN_ID, LOGIN_PASSWORD, "010-0000-0001");
 
             // 로그인 후 토큰 발급
-            Map<String, String> tokens = authService.login(new LoginDto(LOGIN_ID, LOGIN_PASSWORD));
-            accessToken = tokens.get("accessToken");
-            refreshToken = tokens.get("refreshToken");
+            TokensDto tokens = authService.login(new LoginDto(LOGIN_ID, LOGIN_PASSWORD));
+            accessToken = tokens.getAccessToken();
+            refreshToken = tokens.getRefreshToken();
         }
 
         @Test

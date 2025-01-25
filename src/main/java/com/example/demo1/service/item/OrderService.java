@@ -1,12 +1,10 @@
 package com.example.demo1.service.item;
 
+import com.example.demo1.dto.order.*;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.OrderLog;
 import com.example.demo1.entity.item.Orders;
 import com.example.demo1.entity.user.User;
-import com.example.demo1.dto.order.CreateOrdersDto;
-import com.example.demo1.dto.order.OrderResult;
-import com.example.demo1.dto.order.OrderSearch;
 import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemNotFoundException;
 import com.example.demo1.exception.order.InvalidQuantityException;
@@ -77,32 +75,17 @@ public class OrderService {
     }
 
 
-    public List<Map<String, Object>> findAll(OrderSearch orderSearch, User user) {
-        List<Map<String, Object>> response = new ArrayList<>();
+    public List<OrderDetailForPersonal> findAll(OrderSearch orderSearch, User user) {
+        List<OrderDetailForPersonal> response = new ArrayList<>();
         List<Orders> orderList = ordersRepository.findAll(orderSearch, user);
 
         for (Orders orders : orderList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("orderIdx", orders.getIdx());
-            map.put("step", orders.getStep());
-            map.put("orderTime", orders.getCreatedAt());
-
-            List<Map<String, Object>> orderLogList = new ArrayList<>();
+            List<OrderLogDetailForPersonal> orderLogList = new ArrayList<>();
             for (OrderLog orderLog : orders.getOrderLogs()) {
-                Map<String, Object> orderLogMap = new HashMap<>();
-                orderLogMap.put("itemIdx", orderLog.getItem().getIdx());
-                orderLogMap.put("itemName", orderLog.getItem().getItemName());
-                orderLogMap.put("itemPrice", orderLog.getItem().getPrice());
-
-                orderLogMap.put("orderLogIdx", orderLog.getIdx());
-                orderLogMap.put("ea", orderLog.getEa());
-                orderLogMap.put("review", orderLog.getReview());
-
-                orderLogList.add(orderLogMap);
+                orderLogList.add(new OrderLogDetailForPersonal(orderLog));
             }
-
-            map.put("orderLogs", orderLogList);
-            response.add(map);
+            OrderDetailForPersonal dto = new OrderDetailForPersonal(orders, orderLogList);
+            response.add(dto);
         }
 
         return response;
