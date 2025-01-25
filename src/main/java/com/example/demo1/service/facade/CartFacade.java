@@ -27,13 +27,15 @@ public class CartFacade {
     private final OrderService orderService;
 
     @Transactional
-    public ItemCart save(AddItemCartDto itemCartDto) {
-        return itemCartService.save(itemCartDto, getCurrentUser());
+    public ItemCartResponseDto save(AddItemCartDto itemCartDto) {
+        ItemCart savedItemCart = itemCartService.save(itemCartDto, getCurrentUser());
+        return new ItemCartResponseDto(savedItemCart);
     }
 
     @Transactional
-    public ItemCart updateCart(ItemCartEaUpdateDto itemCartUpdateDto) {
-        return itemCartService.updateEa(itemCartUpdateDto, getCurrentUser());
+    public ItemCartResponseDto updateCart(ItemCartEaUpdateDto itemCartUpdateDto) {
+        ItemCart updatedItemCart = itemCartService.updateEa(itemCartUpdateDto, getCurrentUser());
+        return new ItemCartResponseDto(updatedItemCart);
     }
 
     @Transactional

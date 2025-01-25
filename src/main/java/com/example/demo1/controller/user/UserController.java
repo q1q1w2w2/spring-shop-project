@@ -3,6 +3,7 @@ package com.example.demo1.controller.user;
 import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.user.*;
 import com.example.demo1.service.facade.UserMailFacade;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class UserController {
     private final UserMailFacade userMailFacade;
 
     @PostMapping("/api/join")
-    public ResponseEntity<ApiResponse<UserResponseDto>> join(@Validated @RequestBody JoinDto joinDto) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> join(@Valid @RequestBody JoinDto joinDto) {
         UserResponseDto user = userMailFacade.join(joinDto);
         return createResponse(CREATED, "회원가입이 완료되었습니다.", user);
     }
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PatchMapping("/api/update")
-    public ResponseEntity<ApiResponse<UserResponseDto>> update(@Validated @RequestBody UpdateDto updateDto) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> update(@Valid @RequestBody UpdateDto updateDto) {
         UserResponseDto updateUser = userMailFacade.updateUser(updateDto);
         return createResponse(CREATED, "회원 정보가 수정되었습니다.", updateUser);
     }
@@ -51,11 +52,9 @@ public class UserController {
     @PatchMapping("/user/ban/{userIdx}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<Object>> toggleUserBan(@PathVariable Long userIdx) {
-        boolean ban = userMailFacade.toggleUserBan(userIdx);
-        if (ban) {
-            return createResponse(OK, "해당 사용자를 차단했습니다.");
-        }
-        return createResponse(OK, "해당 사용자의 차단을 해제했습니다.");
+        boolean isBanned = userMailFacade.toggleUserBan(userIdx);
+        String message = isBanned ? "해당 사용자를 차단했습니다." : "해당 사용자의 차단을 해제했습니다.";
+        return createResponse(OK, message);
     }
 
     @PostMapping("/api/user/sendMail")
@@ -65,7 +64,7 @@ public class UserController {
     }
 
     @PatchMapping("/api/pwd-reset")
-    public ResponseEntity<ApiResponse<Object>> resetPassword(@RequestBody @Validated LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<Object>> resetPassword(@RequestBody @Valid LoginDto loginDto) {
         userMailFacade.resetPassword(loginDto);
         return createResponse(OK, "비밀번호가 재설정되었습니다.");
     }

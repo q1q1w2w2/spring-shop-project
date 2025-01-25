@@ -32,11 +32,7 @@ public class EmailController {
 
     @PostMapping("/api/mailCode/valid")
     public ResponseEntity<ApiResponse<Object>> mailCodeValid(@RequestBody @Valid EmailCodeValidDto dto) {
-        boolean isValid = mailService.checkAuthCode(dto.getEmail(), dto.getCode());
-        if (isValid) {
-            return ResponseEntity.ok(ApiResponse.success(OK, "인증 코드가 일치합니다."));
-        }
-        return ResponseEntity.status(UNAUTHORIZED)
-                .body(ApiResponse.error(UNAUTHORIZED, "인증 코드가 일치하지 않습니다."));
+        mailService.checkAuthCode(dto.getEmail(), dto.getCode());
+        return ResponseEntity.ok(ApiResponse.success(OK, "인증 코드가 일치합니다."));
     }
 }

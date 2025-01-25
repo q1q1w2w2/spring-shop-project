@@ -108,19 +108,6 @@ public class TokenProvider implements InitializingBean {
         return createAuthentication(subject, token, authority);
     }
 
-//    public Authentication getAuthenticationFromRefreshToken(String refreshToken) throws Exception {
-//        String subject = extractUserIdFromRefreshToken(refreshToken);
-//        UserDetails userDetails = customUserDetailsService.loadUserByUsername(subject);
-//        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-//
-//        String authority = authorities.stream()
-//                .findFirst()
-//                .map(GrantedAuthority::getAuthority)
-//                .orElse("ROLE_USER");
-//
-//        return createAuthentication(subject, refreshToken, authority);
-//    }
-
     public String getAuthorityFromRefreshToken(String refreshToken) throws Exception {
         String subject = extractUserIdFromRefreshToken(refreshToken);
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(subject);

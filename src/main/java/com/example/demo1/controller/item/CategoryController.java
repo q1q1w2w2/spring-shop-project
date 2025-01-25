@@ -5,6 +5,7 @@ import com.example.demo1.entity.item.Category;
 import com.example.demo1.dto.item.CategoryRequestDto;
 import com.example.demo1.dto.item.CategoryResponseDto;
 import com.example.demo1.service.item.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,22 +27,17 @@ public class CategoryController {
 
     @GetMapping("/api/category")
     public ResponseEntity<ApiResponse<List<CategoryResponseDto>>> getAllCategory() {
-        List<CategoryResponseDto> categoryDtoList = new ArrayList<>();
-        List<Category> list = categoryService.findAll();
-        for (Category category : list) {
-            categoryDtoList.add(new CategoryResponseDto(category));
-        }
+        List<CategoryResponseDto> categories = categoryService.findAll();
 
-        ApiResponse<List<CategoryResponseDto>> response = ApiResponse.success(OK, categoryDtoList);
-        return ResponseEntity.status(OK).body(response);
+        ApiResponse<List<CategoryResponseDto>> response = ApiResponse.success(OK, categories);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/api/category")
-    public ResponseEntity<ApiResponse<CategoryResponseDto>> addCategory(@Validated @RequestBody CategoryRequestDto dto) {
-        Category category = categoryService.save(dto.getCategoryName());
-        CategoryResponseDto responseDto = new CategoryResponseDto(category);
+    public ResponseEntity<ApiResponse<CategoryResponseDto>> addCategory(@Valid @RequestBody CategoryRequestDto dto) {
+        CategoryResponseDto category = categoryService.save(dto.getCategoryName());
 
-        ApiResponse<CategoryResponseDto> response = ApiResponse.success(CREATED, "카테고리가 생성되었습니다.", responseDto);
-        return ResponseEntity.ok(response);
+        ApiResponse<CategoryResponseDto> response = ApiResponse.success(CREATED, "카테고리가 생성되었습니다.", category);
+        return ResponseEntity.status(CREATED).body(response);
     }
 }

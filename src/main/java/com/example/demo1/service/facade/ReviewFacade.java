@@ -26,8 +26,8 @@ public class ReviewFacade {
 
     @Transactional
     public ReviewResponseDto saveReview(CreateReviewDto reviewDto) {
-        Review review = reviewService.saveReview(reviewDto, getCurrentUser().getId());
-        return new ReviewResponseDto(review);
+        Review savedReview = reviewService.saveReview(reviewDto, getCurrentUser().getId());
+        return new ReviewResponseDto(savedReview);
     }
 
     public List<GetReviewListDto> getReviews(ReviewSearch reviewSearch) {

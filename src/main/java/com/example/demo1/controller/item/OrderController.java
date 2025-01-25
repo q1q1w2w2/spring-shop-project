@@ -32,8 +32,8 @@ public class OrderController {
     @GetMapping("/order/list/admin")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<OrderListResponseDto>> orderListAdmin(OrderSearch orderSearch) {
-        OrderListResponseDto orderListResponseDto = orderFacade.getOrdersForAdmin(orderSearch);
-        return createResponse(OK, orderListResponseDto);
+        OrderListResponseDto orders = orderFacade.getOrdersForAdmin(orderSearch);
+        return createResponse(OK, orders);
     }
 
     @GetMapping("/order/list")
@@ -44,8 +44,8 @@ public class OrderController {
 
     @GetMapping("/order/list/{orderIdx}")
     public ResponseEntity<ApiResponse<List<OrderLogResponseDto>>> orderDetail(@PathVariable Long orderIdx) {
-        List<OrderLogResponseDto> ordersDetail = orderFacade.getOrderDetail(orderIdx);
-        return createResponse(OK, ordersDetail);
+        List<OrderLogResponseDto> orderLogs = orderFacade.getOrderDetail(orderIdx);
+        return createResponse(OK, orderLogs);
     }
 
     @PatchMapping("/api/order/start")

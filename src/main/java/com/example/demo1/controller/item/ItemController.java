@@ -4,6 +4,7 @@ import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.item.*;
 import com.example.demo1.dto.order.ItemSearch;
 import com.example.demo1.service.facade.ItemFacade;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,23 +27,23 @@ public class ItemController {
 
     @PostMapping("/api/item/save")
     public ResponseEntity<ApiResponse<ItemResponseDto>> saveItem(
-            @Validated @RequestPart(value = "item") ItemDto itemDto,
+            @Valid @RequestPart(value = "item") ItemDto itemDto,
             @RequestPart(value = "image", required = false) List<MultipartFile> images
     ) {
-        ItemResponseDto item = itemFacade.saveItem(itemDto, images);
-        return createResponse(OK, item);
+        ItemResponseDto savedItem = itemFacade.saveItem(itemDto, images);
+        return createResponse(OK, savedItem);
     }
 
     @PatchMapping("/api/item/update")
     public ResponseEntity<ApiResponse<ItemResponseDto>> updateItem(
-            @Validated @RequestPart ItemUpdateDto itemUpdateDto,
+            @Valid @RequestPart ItemUpdateDto itemUpdateDto,
             @RequestPart(value = "addImage", required = false) List<MultipartFile> addImage,
             @RequestPart(value = "deleteImageSeq", required = false) List<Integer> deleteImageSeq,
             @RequestPart(value = "updateImageSeq", required = false) List<Integer> updateImageSeq,
             @RequestPart(value = "changeImage", required = false) List<MultipartFile> changeImage
     ) {
-        ItemResponseDto item = itemFacade.update(itemUpdateDto, addImage, deleteImageSeq, updateImageSeq, changeImage);
-        return createResponse(OK, item);
+        ItemResponseDto updatedItem = itemFacade.update(itemUpdateDto, addImage, deleteImageSeq, updateImageSeq, changeImage);
+        return createResponse(OK, updatedItem);
     }
 
     @GetMapping("/item/list")

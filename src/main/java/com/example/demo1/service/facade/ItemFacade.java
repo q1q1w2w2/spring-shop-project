@@ -45,25 +45,25 @@ public class ItemFacade {
                        List<MultipartFile> changeImages)
     {
         User user = getCurrentUser();
-        Item updateItem = itemService.update(updateDto, user);
+        Item updatedItem = itemService.update(updateDto, user);
 
         if (addImages != null) {
-            itemImageService.addItemImage(addImages, updateItem);
+            itemImageService.addItemImage(addImages, updatedItem);
         }
         if (deleteImageSeq != null) {
-            itemImageService.deleteItemImage(deleteImageSeq, updateItem);
+            itemImageService.deleteItemImage(deleteImageSeq, updatedItem);
         }
         if (updateImageSeq != null) {
-            itemImageService.updateSeq(updateImageSeq, updateItem);
+            itemImageService.updateSeq(updateImageSeq, updatedItem);
         }
         if (changeImages != null) {
-            itemImageService.changeImages(changeImages, updateItem);
+            itemImageService.changeImages(changeImages, updatedItem);
         }
 
-        List<ItemImage> itemImages = itemImageService.findActivateImageByItem(updateItem);
+        List<ItemImage> itemImages = itemImageService.findActivateImageByItem(updatedItem);
         List<String> imageUrls = getImageUrls(itemImages);
 
-        return new ItemResponseDto(updateItem, imageUrls);
+        return new ItemResponseDto(updatedItem, imageUrls);
     }
 
     public List<ItemListDto> getAllItems(ItemSearch itemSearch) {

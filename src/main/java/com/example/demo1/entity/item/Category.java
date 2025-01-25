@@ -25,9 +25,17 @@ public class Category {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Category(String categoryName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Category(String categoryName) {
         this.categoryName = categoryName;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 }

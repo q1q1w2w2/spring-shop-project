@@ -1,5 +1,6 @@
 package com.example.demo1.service.user;
 
+import com.example.demo1.exception.token.InvalidAuthCodeException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,10 @@ public class MailSendService {
         }
     }
 
-    public boolean checkAuthCode(String email, String authCode) {
+    public void checkAuthCode(String email, String authCode) {
         String storeAuthCode = redisTemplate.opsForValue().get("authCode:" + email);
-        return storeAuthCode != null && storeAuthCode.equals(authCode);
+        if (!authCode.equals(storeAuthCode)) {
+            throw new InvalidAuthCodeException();
+        }
     }
 }

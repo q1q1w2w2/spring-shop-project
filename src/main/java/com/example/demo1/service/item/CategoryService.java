@@ -17,20 +17,23 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Category save(String categoryName) {
+    public CategoryResponseDto save(String categoryName) {
         if (categoryRepository.existsByCategoryName(categoryName)) {
             throw new CategoryAlreadyExistException();
         }
 
-        Category category = new Category(
-                categoryName,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        return categoryRepository.save(category);
+        Category category = new Category(categoryName);
+        Category saveCategory = categoryRepository.save(category);
+        return new CategoryResponseDto(saveCategory);
     }
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDto> findAll() {
+        List<CategoryResponseDto> categoryDtoList = new ArrayList<>();
+
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            categoryDtoList.add(new CategoryResponseDto(category));
+        }
+        return categoryDtoList;
     }
 }

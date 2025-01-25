@@ -29,8 +29,8 @@ public class ReviewController {
 
     @PostMapping("/api/item/review")
     public ResponseEntity<ApiResponse<ReviewResponseDto>> createReview(@Valid @RequestBody CreateReviewDto reviewDto) {
-        ReviewResponseDto review = reviewFacade.saveReview(reviewDto);
-        return createResponse(OK, review);
+        ReviewResponseDto savedReview = reviewFacade.saveReview(reviewDto);
+        return createResponse(OK, savedReview);
     }
 
     @GetMapping("/item/review/admin")

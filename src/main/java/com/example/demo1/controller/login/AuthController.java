@@ -5,6 +5,7 @@ import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.RefreshTokenDto;
 import com.example.demo1.service.login.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<ApiResponse<TokensDto>> login(@Validated @RequestBody LoginDto dto) throws Exception {
+    public ResponseEntity<ApiResponse<TokensDto>> login(@Valid @RequestBody LoginDto dto) throws Exception {
         TokensDto tokens = authService.login(dto);
 
         ApiResponse<TokensDto> response = ApiResponse.success(OK, "로그인 되었습니다.", tokens);
@@ -41,9 +42,9 @@ public class AuthController {
     @PostMapping("/api/logout")
     public ResponseEntity<ApiResponse<Object>> logout(
             @RequestHeader(AUTHORIZATION_HEADER) String authorization,
-            @Validated @RequestBody RefreshTokenDto dto
+            @Valid @RequestBody RefreshTokenDto refreshTokenDto
     ) throws Exception {
-        String refreshToken = dto.getRefreshToken();
+        String refreshToken = refreshTokenDto.getRefreshToken();
         String accessToken = authorization.substring(TOKEN_PREFIX.length());
         authService.logout(refreshToken, accessToken);
 

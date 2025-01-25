@@ -11,6 +11,7 @@ import com.example.demo1.service.item.ItemCartService;
 import com.example.demo1.service.item.OrderService;
 import com.example.demo1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,49 +28,52 @@ public class ItemCartController {
 
     @PostMapping("/api/cart")
     public ResponseEntity<ApiResponse<ItemCartResponseDto>> addItemCart(@RequestBody AddItemCartDto itemCartDto) {
-        ItemCart itemCart = cartFacade.save(itemCartDto);
-
-        ApiResponse<ItemCartResponseDto> response = ApiResponse.success(OK, "상품이 장바구니에 담겼습니다.", new ItemCartResponseDto(itemCart));
-        return ResponseEntity.status(OK).body(response);
+        ItemCartResponseDto savedItemCart = cartFacade.save(itemCartDto);
+        return createResponse(OK, "상품이 장바구니에 담겼습니다.", savedItemCart);
     }
 
     @PatchMapping("/api/cart/update")
     public ResponseEntity<ApiResponse<ItemCartResponseDto>> updateCart(@RequestBody ItemCartEaUpdateDto dto) {
-        ItemCart itemCart = cartFacade.updateCart(dto);
-
-        ApiResponse<ItemCartResponseDto> response = ApiResponse.success(OK, "수량이 업데이트 되었습니다.", new ItemCartResponseDto(itemCart));
-        return ResponseEntity.status(OK).body(response);
+        ItemCartResponseDto updatedItemCart = cartFacade.updateCart(dto);
+        return createResponse(OK, "수량이 업데이트 되었습니다.", updatedItemCart);
     }
 
     @PatchMapping("/api/cart/delete/{cartIdx}")
     public ResponseEntity<ApiResponse<Object>> deleteCart(@PathVariable Long cartIdx) {
         cartFacade.deleteCart(cartIdx);
-
-        ApiResponse<Object> response = ApiResponse.success(OK, "장바구니에서 제거되었습니다.");
-        return ResponseEntity.status(OK).body(response);
+        return createResponse(OK, "장바구니에서 삭제되었습니다.");
     }
 
     @PatchMapping("/api/cart/order")
     public ResponseEntity<ApiResponse<Object>> orderCart() {
         cartFacade.orderCart();
-
-        ApiResponse<Object> response = ApiResponse.success(OK, "주문이 완료되었습니다.");
-        return ResponseEntity.status(OK).body(response);
+        return createResponse(OK, "주문이 완료되었습니다.");
     }
 
     @GetMapping("/cart")
     public ResponseEntity<ApiResponse<List<ItemCartResponseDto>>> getCart() {
         List<ItemCartResponseDto> cartList = cartFacade.getCart();
-
-        ApiResponse<List<ItemCartResponseDto>> response = ApiResponse.success(OK, cartList);
-        return ResponseEntity.status(OK).body(response);
+        return createResponse(OK, cartList);
     }
 
     @PatchMapping("/cart/empty")
     public ResponseEntity<ApiResponse<Object>> emptyCart() {
         cartFacade.clearCart();
+        return createResponse(OK, "장바구니를 비웠습니다.");
+    }
 
-        ApiResponse<Object> response = ApiResponse.success(OK, "장바구니를 비웠습니다.");
-        return ResponseEntity.status(OK).body(response);
+    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, String message, T data) {
+        ApiResponse<T> response = ApiResponse.success(status, message, data);
+        return ResponseEntity.status(status).body(response);
+    }
+
+    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, String message) {
+        ApiResponse<T> response = ApiResponse.success(status, message);
+        return ResponseEntity.status(status).body(response);
+    }
+
+    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, T data) {
+        ApiResponse<T> response = ApiResponse.success(status, data);
+        return ResponseEntity.status(status).body(response);
     }
 }
