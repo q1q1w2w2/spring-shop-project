@@ -26,9 +26,7 @@ public class EmailController {
 
     @PostMapping("/api/mailSend")
     public ResponseEntity mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
-        log.info("email: {}", emailDto.getLoginId());
         mailService.joinEmail(emailDto.getLoginId());
-
         return ResponseEntity.ok(ApiResponse.success(OK, "인증 코드를 발송했습니다."));
     }
 

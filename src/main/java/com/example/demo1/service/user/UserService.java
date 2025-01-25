@@ -138,12 +138,12 @@ public class UserService {
     }
 
     @Transactional
-    public boolean banOrUnban(User user) {
+    public boolean toggleUserBan(User user) {
         if (user.getBan() == USER_UNBAN) {
-            user.banOrUnban(USER_BAN);
+            user.toggleUserBan(USER_BAN);
             return true;
         } else {
-            user.banOrUnban(USER_UNBAN);
+            user.toggleUserBan(USER_UNBAN);
             return false;
         }
     }

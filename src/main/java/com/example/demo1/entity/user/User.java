@@ -108,7 +108,7 @@ public class User {
         return this;
     }
 
-    public void banOrUnban(int ban) {
+    public void toggleUserBan(int ban) {
         this.ban = ban;
     }
 }

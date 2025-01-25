@@ -35,7 +35,7 @@ public class MailSendService {
         return sendMail(email, "[demo2] 회원 가입 인증 메일입니다.");
     }
 
-    public String sendMailForPasswordReset(String email) {
+    public String sendMailForResetPassword(String email) {
         return sendMail(email, "[demo2] 비밀번호 재설정 인증 메일입니다.");
     }
 

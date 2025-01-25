@@ -6,12 +6,9 @@ import com.example.demo1.dto.user.RefreshTokenDto;
 import com.example.demo1.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
