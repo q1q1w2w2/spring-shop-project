@@ -41,17 +41,21 @@ public class ItemController {
     ) {
         User user = userService.getCurrentUser();
 
-        Map<String, Object> saveInfo = itemService.save(itemDto, images, user);
-        Item item = (Item) saveInfo.get("item");
-        List<ItemImage> itemImages = (List<ItemImage>) saveInfo.get("itemImages");
+        Map<String, Object> savedItemInfo = itemService.save(itemDto, images, user);
+        Item item = (Item) savedItemInfo.get("item");
+        List<ItemImage> itemImages = (List<ItemImage>) savedItemInfo.get("itemImages");
+        ArrayList<String> imageUrls = getImageUrls(itemImages);
 
+        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(item, imageUrls));
+        return ResponseEntity.ok(response);
+    }
+
+    private ArrayList<String> getImageUrls(List<ItemImage> itemImages) {
         ArrayList<String> imageUrls = new ArrayList<>();
         for (ItemImage itemImage : itemImages) {
             imageUrls.add(itemImage.getImageUrl());
         }
-
-        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(item, imageUrls));
-        return ResponseEntity.ok(response);
+        return imageUrls;
     }
 
     @PatchMapping("/api/item/update")
@@ -80,12 +84,9 @@ public class ItemController {
         }
 
         List<ItemImage> itemImages = itemImageService.findActivateImageByItem(updateItem);
-        List<String> imageUrlList = new ArrayList<>();
-        for (ItemImage itemImage : itemImages) {
-            imageUrlList.add(itemImage.getImageUrl());
-        }
+        ArrayList<String> imageUrls = getImageUrls(itemImages);
 
-        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(updateItem, imageUrlList));
+        ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(updateItem, imageUrls));
         return ResponseEntity.ok(response);
     }
 
@@ -95,13 +96,8 @@ public class ItemController {
         List<ItemListDto> itemListDto = new ArrayList<>();
 
         for (Item item : itemList) {
-            List<String> imageUrls = new ArrayList<>();
-
             List<ItemImage> images = itemImageService.findActivateImageByItem(item);
-            for (ItemImage image : images) {
-                imageUrls.add(image.getImageUrl());
-            }
-
+            ArrayList<String> imageUrls = getImageUrls(images);
             itemListDto.add(new ItemListDto(item, imageUrls));
         }
 
@@ -113,11 +109,7 @@ public class ItemController {
     public ResponseEntity<ApiResponse<ItemResponseDto>> itemDetail(@RequestParam Long itemIdx) {
         Item item = itemService.findByIdx(itemIdx);
         List<ItemImage> itemImages = itemImageService.findActivateImageByItem(item);
-
-        List<String> imageUrls = new ArrayList<>();
-        for (ItemImage itemImage : itemImages) {
-            imageUrls.add(itemImage.getImageUrl());
-        }
+        ArrayList<String> imageUrls = getImageUrls(itemImages);
 
         ApiResponse<ItemResponseDto> response = ApiResponse.success(OK, new ItemResponseDto(item, imageUrls));
         return ResponseEntity.ok(response);

@@ -67,9 +67,6 @@ public class ItemCartController {
 
         List<CreateOrdersDto> orderList = new ArrayList<>();
         List<ItemCart> cartList = itemCartService.getCart(user);
-        if (cartList.isEmpty()) {
-            throw new ItemCartNotFoundException("장바구니가 비어있습니다.");
-        }
         for (ItemCart itemCart : cartList) {
             orderList.add(new CreateOrdersDto(itemCart.getItem().getIdx(), itemCart.getEa()));
             itemCartService.orderCart(itemCart.getIdx(), user);
@@ -82,7 +79,7 @@ public class ItemCartController {
 
     @GetMapping("/cart")
     public ResponseEntity<ApiResponse<List<ItemCartResponseDto>>> getCart() {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+        User user = userService.getCurrentUser();
         List<ItemCartResponseDto> cartList = itemCartService.getCartDto(user);
 
         ApiResponse<List<ItemCartResponseDto>> response = ApiResponse.success(OK, cartList);
@@ -91,7 +88,7 @@ public class ItemCartController {
 
     @PatchMapping("/cart/empty")
     public ResponseEntity<ApiResponse<Object>> emptyCart() {
-        User user = userService.getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
+        User user = userService.getCurrentUser();
         itemCartService.emptyCart(user);
 
         ApiResponse<Object> response = ApiResponse.success(OK, "장바구니를 비웠습니다.");
