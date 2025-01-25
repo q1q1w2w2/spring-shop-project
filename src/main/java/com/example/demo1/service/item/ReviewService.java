@@ -76,7 +76,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void blindReviewCancel(Long reviewIdx) {
+    public void publishReview(Long reviewIdx) {
         Review review = findReviewByIdx(reviewIdx);
         review.blind(REVIEW_BLIND_CANCEL);
     }

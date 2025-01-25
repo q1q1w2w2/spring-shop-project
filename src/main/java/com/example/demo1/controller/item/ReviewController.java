@@ -9,9 +9,11 @@ import com.example.demo1.dto.order.CreateReviewDto;
 import com.example.demo1.dto.order.GetReviewListDto;
 import com.example.demo1.dto.order.ReviewResponseDto;
 import com.example.demo1.dto.order.ReviewSearch;
+import com.example.demo1.service.facade.ReviewFacade;
 import com.example.demo1.service.item.ItemService;
 import com.example.demo1.service.item.ReviewService;
 import com.example.demo1.service.user.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,57 +39,48 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ItemService itemService;
 
-    @PostMapping("/api/item/review")
-    public ResponseEntity<ApiResponse<ReviewResponseDto>> createReview(@Validated @RequestBody CreateReviewDto dto) {
-        User user = userService.getCurrentUser();
-        Review review = reviewService.saveReview(dto, user.getId());
+    private final ReviewFacade reviewFacade;
 
-        ApiResponse<ReviewResponseDto> response = ApiResponse.success(OK, new ReviewResponseDto(review));
-        return ResponseEntity.ok(response);
+    @PostMapping("/api/item/review")
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> createReview(@Valid @RequestBody CreateReviewDto reviewDto) {
+        ReviewResponseDto review = reviewFacade.saveReview(reviewDto);
+        return createResponse(OK, review);
     }
 
     @GetMapping("/item/review/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<List<Object>>> getReview(@ModelAttribute ReviewSearch reviewSearch) {
-        List<Review> reviewList = reviewService.getReview(reviewSearch);
-        List<Object> reviewDtoList = new ArrayList<>();
-        for (Review review : reviewList) {
-            reviewDtoList.add(new GetReviewListDto(review));
-        }
-
-        ApiResponse<List<Object>> response = ApiResponse.success(OK, reviewDtoList);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<GetReviewListDto>>> getReview(@ModelAttribute ReviewSearch reviewSearch) {
+        List<GetReviewListDto> reviews = reviewFacade.getReviews(reviewSearch);
+        return createResponse(OK, reviews);
     }
 
     @GetMapping("/item/review")
-    public ResponseEntity getItemReview(@Validated @RequestBody ItemRequestDto dto) {
-        Item item = itemService.findByIdx(dto.getItemIdx());
-        List<Review> reviewList = reviewService.getReviewByItemIdx(item);
-        List<Object> reviewDtoList = new ArrayList<>();
-        for (Review review : reviewList) {
-            GetReviewListDto reviewListDto = new GetReviewListDto(review);
-            reviewDtoList.add(reviewListDto);
-        }
-
-        ApiResponse<List<Object>> response = ApiResponse.success(OK, reviewDtoList);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<GetReviewListDto>>> getItemReview(@Valid @RequestBody ItemRequestDto itemRequestDto) {
+        List<GetReviewListDto> itemReviews = reviewFacade.getItemReviews(itemRequestDto);
+        return createResponse(OK, itemReviews);
     }
 
     @PatchMapping("/item/review/blind")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity reviewBlind(@RequestParam Long reviewIdx) {
-        reviewService.blindReview(reviewIdx);
-
-        ApiResponse<Object> response = ApiResponse.success(OK, "후기를 차단했습니다.");
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<Object>> reviewBlind(@RequestParam Long reviewIdx) {
+        reviewFacade.blindReview(reviewIdx);
+        return createResponse(OK, "후기를 차단했습니다.");
     }
 
     @PatchMapping("/item/review/blind/cancel")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity reviewBlindCancel(@RequestParam Long reviewIdx) {
-        reviewService.blindReviewCancel(reviewIdx);
+    public ResponseEntity<ApiResponse<Object>> reviewBlindCancel(@RequestParam Long reviewIdx) {
+        reviewFacade.publishReview(reviewIdx);
+        return createResponse(OK, "차단을 해제했습니다.");
+    }
 
-        ApiResponse<Object> response = ApiResponse.success(OK, "차단을 해제했습니다.");
-        return ResponseEntity.ok(response);
+    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, String message) {
+        ApiResponse<T> response = ApiResponse.success(status, message);
+        return ResponseEntity.status(status).body(response);
+    }
+
+    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, T data) {
+        ApiResponse<T> response = ApiResponse.success(status, data);
+        return ResponseEntity.status(status).body(response);
     }
 }
