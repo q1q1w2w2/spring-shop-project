@@ -30,10 +30,8 @@ public class ItemResponseDto {
         this.userIdx = item.getUser().getId();
         this.itemName = item.getItemName();
         this.category = item.getCategory().getIdx();
-//        this.quantity = item.getQuantity();
         this.price = item.getPrice();
         this.explanation = item.getExplanation();
-//        this.imageUrls = imageUrls;
         this.createdAt = item.getCreatedAt();
         this.updatedAt = item.getUpdatedAt();
     }
@@ -43,7 +41,6 @@ public class ItemResponseDto {
         this.userIdx = item.getUser().getId();
         this.itemName = item.getItemName();
         this.category = item.getCategory().getIdx();
-//        this.quantity = item.getQuantity();
         this.price = item.getPrice();
         this.explanation = item.getExplanation();
         this.imageUrls = imageUrls;

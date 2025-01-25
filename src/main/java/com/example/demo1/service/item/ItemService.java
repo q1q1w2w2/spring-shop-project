@@ -1,5 +1,6 @@
 package com.example.demo1.service.item;
 
+import com.example.demo1.dto.item.SaveItemResponseDto;
 import com.example.demo1.entity.item.Category;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.ItemImage;
@@ -40,8 +41,7 @@ public class ItemService {
     private final ItemImageRepository itemImageRepository;
 
     @Transactional
-    public Map<String, Object> save(ItemDto dto, List<MultipartFile> images, User user) {
-
+    public SaveItemResponseDto save(ItemDto dto, List<MultipartFile> images, User user) {
         if (dto.getPrice() < 0) {
             throw new IllegalArgumentException("상품 가격은 양수여야 합니다.");
         }
@@ -72,11 +72,7 @@ public class ItemService {
             }
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("item", item);
-        response.put("itemImages", itemImageRepository.findByItem(item));
-
-        return response;
+        return new SaveItemResponseDto(item, itemImageRepository.findByItem(item));
     }
 
     @Transactional
