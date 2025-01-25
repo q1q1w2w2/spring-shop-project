@@ -6,7 +6,6 @@ import com.example.demo1.dto.item.CategoryRequestDto;
 import com.example.demo1.dto.item.CategoryResponseDto;
 import com.example.demo1.service.item.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;

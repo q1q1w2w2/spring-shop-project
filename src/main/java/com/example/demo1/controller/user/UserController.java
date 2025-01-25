@@ -1,11 +1,8 @@
 package com.example.demo1.controller.user;
 
 import com.example.demo1.dto.common.ApiResponse;
-import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.user.*;
 import com.example.demo1.service.facade.UserMailFacade;
-import com.example.demo1.service.user.MailSendService;
-import com.example.demo1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -25,13 +25,13 @@ public class EmailController {
     private final MailSendService mailService;
 
     @PostMapping("/api/mailSend")
-    public ResponseEntity mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
+    public ResponseEntity<ApiResponse<Object>> mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
         mailService.joinEmail(emailDto.getLoginId());
         return ResponseEntity.ok(ApiResponse.success(OK, "인증 코드를 발송했습니다."));
     }
 
     @PostMapping("/api/mailCode/valid")
-    public ResponseEntity mailCodeValid(@RequestBody @Valid EmailCodeValidDto dto) {
+    public ResponseEntity<ApiResponse<Object>> mailCodeValid(@RequestBody @Valid EmailCodeValidDto dto) {
         boolean isValid = mailService.checkAuthCode(dto.getEmail(), dto.getCode());
         if (isValid) {
             return ResponseEntity.ok(ApiResponse.success(OK, "인증 코드가 일치합니다."));
