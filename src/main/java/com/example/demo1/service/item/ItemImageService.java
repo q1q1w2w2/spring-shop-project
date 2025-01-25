@@ -19,6 +19,7 @@ import static com.example.demo1.util.constant.Constants.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemImageService {
 
     private final ItemImageRepository itemImageRepository;

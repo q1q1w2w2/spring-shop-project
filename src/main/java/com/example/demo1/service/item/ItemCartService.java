@@ -22,12 +22,13 @@ import static com.example.demo1.util.constant.CartStatus.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ItemCartService {
 
     private final ItemCartRepository itemCartRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     public ItemCart save(AddItemCartDto dto, User user) {
         Optional<ItemCart> findItemCart = itemCartRepository.findByUserIdAndItemIdxAndStatusZero(user.getId(), dto.getItemIdx());
         if (findItemCart.isPresent()) {
@@ -46,6 +47,7 @@ public class ItemCartService {
         return itemCartRepository.save(itemCart);
     }
 
+    @Transactional
     public ItemCart updateEa(ItemCartEaUpdateDto dto, User user) {
         ItemCart itemCart = itemCartRepository.findById(dto.getCartIdx())
                 .orElseThrow(ItemNotFoundException::new);
@@ -55,7 +57,7 @@ public class ItemCartService {
 
     public List<ItemCartResponseDto> getCartDto(User user) {
         List<ItemCart> itemCarts = itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD.getValue())
-                .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
+                .orElseThrow(ItemCartNotFoundException::new);
 
         List<ItemCartResponseDto> itemCartDtoList = new ArrayList<>();
         for (ItemCart itemCart : itemCarts) {
@@ -66,24 +68,27 @@ public class ItemCartService {
 
     public List<ItemCart> getCart(User user) {
         return itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD.getValue())
-                .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
+                .orElseThrow(ItemCartNotFoundException::new);
     }
 
+    @Transactional
     public void deleteCart(Long cartIdx, User user) {
         ItemCart itemCart = itemCartRepository.findById(cartIdx)
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateStatus(CART_DELETED.getValue());
     }
 
+    @Transactional
     public void orderCart(Long itemCartIdx, User user) {
         ItemCart itemCart = itemCartRepository.findById(itemCartIdx)
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateStatus(CART_COMP.getValue());
     }
 
+    @Transactional
     public void clearCart(User user) {
         List<ItemCart> itemCarts = itemCartRepository.findByUserAndStatusIsLike(user, CART_ADD.getValue())
-                .orElseThrow(() -> new ItemCartNotFoundException("장바구니를 찾을 수 없습니다."));
+                .orElseThrow(ItemCartNotFoundException::new);
         for (ItemCart itemCart : itemCarts) {
             itemCart.updateStatus(CART_DELETED.getValue());
         }

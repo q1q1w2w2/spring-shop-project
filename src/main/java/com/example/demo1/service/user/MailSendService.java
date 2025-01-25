@@ -9,19 +9,19 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MailSendService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final JavaMailSender mailSender;
     private int authNumber;
+
+    private final String AUTH_CODE_PREFIX = "authCode:";
 
     public void makeRandomNumber() {
         Random random = new Random();
@@ -52,7 +52,7 @@ public class MailSendService {
         String authCode = Integer.toString(authNumber);
 
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set("authCode:" + email, authCode, 5, TimeUnit.MINUTES);
+        valueOperations.set(AUTH_CODE_PREFIX + email, authCode, 5, TimeUnit.MINUTES);
 
         mailSend(setFrom, toMail, title, content);
 
@@ -74,7 +74,7 @@ public class MailSendService {
     }
 
     public void checkAuthCode(String email, String authCode) {
-        String storeAuthCode = redisTemplate.opsForValue().get("authCode:" + email);
+        String storeAuthCode = redisTemplate.opsForValue().get(AUTH_CODE_PREFIX + email);
         if (!authCode.equals(storeAuthCode)) {
             throw new InvalidAuthCodeException();
         }

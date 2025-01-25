@@ -3,8 +3,6 @@ package com.example.demo1.service.login;
 import com.example.demo1.dto.auth.TokensDto;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.exception.token.TokenValidationException;
-import com.example.demo1.service.user.UserService;
-import com.example.demo1.util.constant.Role;
 import com.example.demo1.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.example.demo1.util.constant.Role.*;
 

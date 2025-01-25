@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TokenService {
 
     private final TokenProvider tokenProvider;
 
+    @Transactional
     public TokensDto refreshTokens(RefreshTokenDto refreshTokenDto) throws Exception {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (!tokenProvider.validateToken(refreshToken)) {
