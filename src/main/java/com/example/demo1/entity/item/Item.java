@@ -1,6 +1,7 @@
 package com.example.demo1.entity.item;
 
 import com.example.demo1.entity.user.User;
+import com.example.demo1.util.constant.ItemStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.demo1.util.constant.ItemStatus.*;
 
 @Entity
 @Getter
@@ -38,7 +41,7 @@ public class Item {
     private String explanation;
 
     @Column(name = "state")
-    private int state; // 0: 활성, 1: 삭제
+    private int status = ACTIVATED.getValue();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -50,15 +53,22 @@ public class Item {
     private List<ItemImage> images = new ArrayList<>();
 
     @Builder
-    public Item(User userIdx, String itemName, Category category, int price, String explanation, int state, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Item(User userIdx, String itemName, Category category, int price, String explanation) {
         this.user = userIdx;
         this.itemName = itemName;
         this.category = category;
         this.price = price;
         this.explanation = explanation;
-        this.state = state;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 
     public Item update(Item item) {
@@ -66,12 +76,10 @@ public class Item {
         this.category = item.getCategory();
         this.price = item.getPrice();
         this.explanation = item.getExplanation();
-        this.updatedAt = LocalDateTime.now().withNano(0);
         return this;
     }
 
     public void delete() {
-        this.state = 1;
-        this.updatedAt = LocalDateTime.now().withNano(0);
+        this.status = DELETED.getValue();
     }
 }

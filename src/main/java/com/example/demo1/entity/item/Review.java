@@ -23,7 +23,7 @@ public class Review {
     private OrderLog orderLog;
 
     @Column(name = "score")
-    private Integer score; // 1~5 점
+    private int score;
 
     @Column(name = "review")
     private String review;
@@ -38,13 +38,21 @@ public class Review {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Review(OrderLog orderLog, String review, int score, int blind, LocalDateTime createAt, LocalDateTime updateAt) {
+    public Review(OrderLog orderLog, String review, int score, int blind) {
         this.orderLog = orderLog;
         this.review = review;
         this.score = score;
         this.blind = blind;
-        this.createdAt = createAt;
-        this.updatedAt = updateAt;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 
     public void blind(int blind) {

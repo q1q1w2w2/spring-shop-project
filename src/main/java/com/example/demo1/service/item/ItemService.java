@@ -15,6 +15,7 @@ import com.example.demo1.exception.Item.item.ItemOwnershipException;
 import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.repository.item.ItemImageRepository;
 import com.example.demo1.repository.item.ItemRepository;
+import com.example.demo1.util.constant.ItemStatus;
 import com.example.demo1.util.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.demo1.util.constant.Constants.*;
+import static com.example.demo1.util.constant.ItemStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +52,6 @@ public class ItemService {
                 .price(dto.getPrice())
                 .category(getCategory(dto.getCategory()))
                 .explanation(dto.getExplanation())
-                .createdAt(LocalDateTime.now().withNano(0))
-                .updatedAt(LocalDateTime.now().withNano(0))
                 .build();
         itemRepository.save(item);
 
@@ -65,8 +63,6 @@ public class ItemService {
                         .item(item)
                         .imageUrl(objectKey)
                         .seq(i + 1)
-                        .createdAt(LocalDateTime.now().withNano(0))
-                        .updatedAt(LocalDateTime.now().withNano(0))
                         .build();
                 itemImageRepository.save(itemImage);
             }
@@ -93,7 +89,7 @@ public class ItemService {
     @Transactional
     public void delete(Long itemIdx, User user) {
         Item item = findByIdx(itemIdx);
-        if (item.getState() == DELETED_ITEM_STATE) {
+        if (item.getStatus() == DELETED.getValue()) {
             log.error("상품 삭제 실패: 이미 삭제된 상품");
             throw new ItemAlreadyDeleteException("이미 삭제된 상품입니다.");
         }

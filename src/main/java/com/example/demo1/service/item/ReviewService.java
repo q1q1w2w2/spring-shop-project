@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.demo1.util.constant.Constants.*;
+import static com.example.demo1.util.constant.OrderStep.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class ReviewService {
         if (!orders.getUser().getId().equals(userId)) {
             throw new ReviewNotAllowedException("해당 상품을 주문한 사용자가 아닙니다.");
         }
-        if (orders.getStep() != OrderStep.ORDER_COMP.getValue()) {
+        if (orders.getStep() != DELIVERY_COMP.getValue()) {
             throw new ReviewNotAllowedException("배송 완료 상태에서만 리뷰를 달 수 있습니다.");
         }
         if (orderLog.getReview() == REVIEW_COMP) {
@@ -54,8 +55,6 @@ public class ReviewService {
                 .orderLog(orderLog)
                 .review(dto.getReview())
                 .score(dto.getScore())
-                .createAt(LocalDateTime.now().withNano(0))
-                .updateAt(LocalDateTime.now().withNano(0))
                 .build();
 
         return reviewRepository.save(review);

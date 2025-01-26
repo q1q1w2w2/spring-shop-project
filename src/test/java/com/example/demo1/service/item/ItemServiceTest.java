@@ -1,5 +1,7 @@
 package com.example.demo1.service.item;
 
+import com.example.demo1.dto.item.CategoryResponseDto;
+import com.example.demo1.dto.item.SaveItemResponseDto;
 import com.example.demo1.entity.item.Category;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.user.User;
@@ -9,6 +11,7 @@ import com.example.demo1.dto.order.ItemSearch;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemOwnershipException;
+import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +40,8 @@ class ItemServiceTest {
     private Item item;
     private User user;
     private Category category;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
@@ -83,7 +88,7 @@ class ItemServiceTest {
             itemService.delete(item.getIdx(), user);
 
             // then
-            assertThat(item.getState()).isEqualTo(1);
+            assertThat(item.getStatus()).isEqualTo(1);
         }
 
         @Test
@@ -157,14 +162,16 @@ class ItemServiceTest {
 
     // 카테고리 등록
     Category createCategory() {
-        return categoryService.save("카테고리1");
+        CategoryResponseDto category = categoryService.save("카테고리1");
+        return categoryRepository.findById(category.getCategoryIdx())
+                .orElseThrow();
     }
 
     // 상품 등록
     Item createItem(String itemName, Long categoryIdx, User user) {
         ItemDto itemDto = new ItemDto(itemName, categoryIdx, 10000, ITEM_EXPLANATION);
-        Map<String, Object> save = itemService.save(itemDto, null, user);
-        return (Item) save.get("item");
+        SaveItemResponseDto savedResult = itemService.save(itemDto, null, user);
+        return savedResult.getItem();
     }
 
 }

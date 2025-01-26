@@ -43,13 +43,21 @@ public class OrderLog {
     private LocalDateTime updatedAt;
 
     @Builder
-    public OrderLog(Orders orders, Item item, int ea, int review, LocalDateTime createAt, LocalDateTime updateAt) {
+    public OrderLog(Orders orders, Item item, int ea, int review) {
         this.orders = orders;
         this.item = item;
         this.ea = ea;
         this.review = review;
-        this.createdAt = createAt;
-        this.updatedAt = updateAt;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 
     public static OrderLog createOrderLog(Orders orders, Item item, int ea) {
@@ -58,11 +66,8 @@ public class OrderLog {
                 .item(item)
                 .ea(ea)
                 .review(0)
-                .createAt(LocalDateTime.now().withNano(0))
-                .updateAt(LocalDateTime.now().withNano(0))
                 .build();
 
-//        item.removeQuantity(ea);
         orders.addOrderLog(orderLog);
 
         return orderLog;

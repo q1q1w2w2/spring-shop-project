@@ -36,12 +36,20 @@ public class ItemImage {
     private LocalDateTime updatedAt;
 
     @Builder
-    public ItemImage(Item item, String imageUrl, int seq, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ItemImage(Item item, String imageUrl, int seq) {
         this.item = item;
         this.imageUrl = imageUrl;
         this.seq = seq;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 
     public void delete() {

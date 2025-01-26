@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class OrderSearch {
     private String loginId;
-    private Integer step;
+    private int step;
 }

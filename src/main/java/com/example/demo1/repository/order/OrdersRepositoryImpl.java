@@ -48,7 +48,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
         if (orderSearch.getLoginId() != null) {
             builder.and(o.user.loginId.contains(orderSearch.getLoginId()));
         }
-        if (orderSearch.getStep() != null && orderSearch.getStep() != 0) {
+        if (orderSearch.getStep() != 0) {
             builder.and(o.step.eq(orderSearch.getStep()));
         }
 

@@ -13,6 +13,7 @@ import com.example.demo1.exception.order.OrderStepException;
 import com.example.demo1.repository.item.ItemRepository;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.order.OrdersRepository;
+import com.example.demo1.util.constant.ItemStatus;
 import com.example.demo1.util.constant.OrderStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.demo1.util.constant.Constants.*;
+import static com.example.demo1.util.constant.ItemStatus.*;
 import static com.example.demo1.util.constant.OrderStep.*;
 
 @Service
@@ -44,7 +44,7 @@ public class OrderService {
             Item item = itemRepository.findById(dto.getItemIdx())
                     .orElseThrow(ItemNotFoundException::new);
 
-            if (item.getState() == DELETED_ITEM_STATE) {
+            if (item.getStatus() == DELETED.getValue()) {
                 throw new ItemAlreadyDeleteException("삭제된 상품이 포함되어 있습니다: " + dto.getItemIdx());
             }
 
@@ -93,22 +93,22 @@ public class OrderService {
 
     @Transactional
     public void startOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_START.getValue(), "이미 배송이 시작된 주문입니다.");
+        updateStep(ordersIdx, ORDER_START, "이미 배송이 시작된 주문입니다.");
     }
 
     @Transactional
     public void completeOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_COMP.getValue(), "이미 배송이 완료된 주문입니다.");
+        updateStep(ordersIdx, DELIVERY_COMP, "이미 배송이 완료된 주문입니다.");
     }
 
     @Transactional
     public void cancelOrders(Long ordersIdx) {
-        updateStep(ordersIdx, ORDER_CANCEL.getValue(), "이미 취소된 주문입니다.");
+        updateStep(ordersIdx, ORDER_CANCEL, "이미 취소된 주문입니다.");
     }
 
-    private void updateStep(Long ordersIdx, int step, String message) {
+    private void updateStep(Long ordersIdx, OrderStep step, String message) {
         Orders orders = getOrders(ordersIdx);
-        if (orders.getStep() == step) {
+        if (orders.getStep() == step.getValue()) {
             throw new OrderStepException(message);
         }
         orders.updateStep(step);

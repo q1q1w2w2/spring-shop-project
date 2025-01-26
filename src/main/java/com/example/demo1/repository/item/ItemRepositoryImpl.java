@@ -4,6 +4,7 @@ import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.QCategory;
 import com.example.demo1.entity.item.QItem;
 import com.example.demo1.dto.order.ItemSearch;
+import com.example.demo1.util.constant.ItemStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
@@ -11,6 +12,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
+import static com.example.demo1.util.constant.ItemStatus.*;
 
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepositoryCustom {
@@ -25,7 +28,6 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
 
     @Override
     public List<Item> findAll(ItemSearch itemSearch) {
-        // 검색조건 itemName, category
         QItem i = QItem.item;
         QCategory c = QCategory.category;
 
@@ -39,8 +41,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
             builder.and(i.category.idx.eq(itemSearch.getCategoryIdx()));
         }
 
-        // state가 0인 경우만 보여주기(판매중)
-        builder.and(i.state.eq(0));
+        builder.and(i.status.eq(ACTIVATED.getValue()));
 
         return queryFactory
                 .selectFrom(i)

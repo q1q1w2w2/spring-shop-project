@@ -33,7 +33,7 @@ public class ItemImageService {
     public List<String> addItemImage(List<MultipartFile> images, Item item) {
         List<String> imageUrls = s3Service.saveFiles(images);
         int lastImageSeq = itemImageRepository.findByItemAndSeqNotOrderBySeq(item, DELETED_IMAGE).size();
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         for (int i = 0; i < imageUrls.size(); i++) {
             String objectKey = s3Service.getObjectKey(imageUrls.get(i));
@@ -42,8 +42,6 @@ public class ItemImageService {
                     .item(item)
                     .imageUrl(objectKey)
                     .seq(lastImageSeq + i + 1)
-                    .createdAt(LocalDateTime.now().withNano(0))
-                    .updatedAt(LocalDateTime.now().withNano(0))
                     .build();
 
             ItemImage saveImage = itemImageRepository.save(itemImage);
@@ -54,7 +52,7 @@ public class ItemImageService {
 
     @Transactional
     public void deleteItemImage(List<Integer> deleteImageSeq, Item item) {
-        Set<Integer> deleteSet = new HashSet<>(deleteImageSeq); // 중복방지(set)
+        Set<Integer> deleteSet = new HashSet<>(deleteImageSeq);
         List<ItemImage> itemImages = itemImageRepository.findByItemAndSeqNotOrderBySeq(item, DELETED_IMAGE);
 
         Set<Integer> existSeq = new HashSet<>();

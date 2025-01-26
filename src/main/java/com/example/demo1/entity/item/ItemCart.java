@@ -44,8 +44,16 @@ public class ItemCart {
         this.item = item;
         this.ea = ea;
         this.status = 0;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now().withNano(0);
     }
 
     public void updateEa(int ea) {
