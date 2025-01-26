@@ -1,5 +1,7 @@
 package com.example.demo1.service.item;
 
+import com.example.demo1.dto.item.CategoryResponseDto;
+import com.example.demo1.dto.item.SaveItemResponseDto;
 import com.example.demo1.entity.item.*;
 import com.example.demo1.entity.user.User;
 import com.example.demo1.dto.item.ItemDto;
@@ -9,6 +11,7 @@ import com.example.demo1.dto.order.OrderResult;
 import com.example.demo1.dto.order.ReviewSearch;
 import com.example.demo1.dto.user.JoinDto;
 import com.example.demo1.exception.Item.review.ReviewNotAllowedException;
+import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +45,8 @@ class ReviewServiceTest {
     private OrderResult orderResult;
 
     private final int REVIEW_COMP = 1;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
@@ -149,14 +154,16 @@ class ReviewServiceTest {
 
     // 카테고리 등록
     Category createCategory() {
-        return categoryService.save("카테고리1");
+        CategoryResponseDto category = categoryService.save("카테고리1");
+        return categoryRepository.findById(category.getCategoryIdx())
+                .orElseThrow();
     }
 
     // 상품 등록
     Item createItem(String itemName, Long categoryIdx, User user) {
-        ItemDto itemDto = new ItemDto(itemName, categoryIdx, 10000, "상품의 설명입니다.");
-        Map<String, Object> save = itemService.save(itemDto, null, user);
-        return (Item) save.get("item");
+        ItemDto itemDto = new ItemDto(itemName, categoryIdx, 10000, "설명");
+        SaveItemResponseDto savedResult = itemService.save(itemDto, null, user);
+        return savedResult.getItem();
     }
 
     // 주문 생성

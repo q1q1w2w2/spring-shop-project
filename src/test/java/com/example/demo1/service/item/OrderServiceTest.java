@@ -1,5 +1,7 @@
 package com.example.demo1.service.item;
 
+import com.example.demo1.dto.item.CategoryResponseDto;
+import com.example.demo1.dto.item.SaveItemResponseDto;
 import com.example.demo1.entity.item.Category;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.OrderLog;
@@ -13,6 +15,7 @@ import com.example.demo1.exception.Item.item.ItemAlreadyDeleteException;
 import com.example.demo1.exception.Item.item.ItemNotFoundException;
 import com.example.demo1.exception.order.InvalidQuantityException;
 import com.example.demo1.exception.order.OrderStepException;
+import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +49,8 @@ class OrderServiceTest {
 
     private User user;
     private Category category;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
@@ -276,14 +281,16 @@ class OrderServiceTest {
 
     // 카테고리 등록
     Category createCategory() {
-        return categoryService.save("카테고리1");
+        CategoryResponseDto categoryResponseDto = categoryService.save("카테고리1");
+        return categoryRepository.findById(categoryResponseDto.getCategoryIdx())
+                .orElseThrow();
     }
 
     // 상품 등록
     Item createItem(String itemName, Long categoryIdx, User user) {
         ItemDto itemDto = new ItemDto(itemName, categoryIdx, 10000, "상품의 설명입니다.");
-        Map<String, Object> save = itemService.save(itemDto, null, user);
-        return (Item) save.get("item");
+        SaveItemResponseDto savedResult = itemService.save(itemDto, null, user);
+        return savedResult.getItem();
     }
 
     // 주문 생성

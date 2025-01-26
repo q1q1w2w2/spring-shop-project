@@ -1,18 +1,14 @@
 package com.example.demo1.entity.item;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@Slf4j
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "order_log")
 public class OrderLog {
 

@@ -3,6 +3,7 @@ package com.example.demo1.entity.item;
 import com.example.demo1.entity.user.User;
 import com.example.demo1.util.constant.OrderStep;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "orders")
 public class Orders {
 
     @Id
@@ -30,9 +32,6 @@ public class Orders {
 
     @Column(name = "step")
     private int step; // 주문완료:1, 배송시작:2, 배송완료:3, 취소:10
-
-//    @Enumerated(EnumType.ORDINAL)
-//    private OrderStep step;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderLog> orderLogs = new ArrayList<>();

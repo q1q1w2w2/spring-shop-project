@@ -3,6 +3,7 @@ package com.example.demo1.entity.item;
 import com.example.demo1.entity.user.User;
 import com.example.demo1.util.constant.ItemStatus;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,14 @@ import static com.example.demo1.util.constant.ItemStatus.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "item",
+        indexes = {
+                @Index(name = "item_name_idx", columnList = "item_name"),
+                @Index(name = "category_idx", columnList = "category"),
+                @Index(name = "status_idx", columnList = "status")
+        }
+)
 public class Item {
 
     @Id

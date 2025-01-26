@@ -2,6 +2,7 @@ package com.example.demo1.entity.item;
 
 import com.example.demo1.entity.user.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "item_cart")
 public class ItemCart {
 
     @Id
