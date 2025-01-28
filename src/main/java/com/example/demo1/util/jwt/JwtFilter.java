@@ -26,10 +26,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         log.info("JWT 인증 정보 Security Context에 저장");
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        String jwt = resolveToken(httpServletRequest);
-        String requestURI = httpServletRequest.getRequestURI();
+        String jwt = resolveToken(request);
+        String requestURI = request.getRequestURI();
         log.info("jwt: {}", jwt);
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {

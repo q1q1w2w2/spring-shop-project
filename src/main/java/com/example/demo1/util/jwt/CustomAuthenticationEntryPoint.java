@@ -17,7 +17,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         // 401
-        final Map<String, Object> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -28,7 +28,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         body.put("message", "유효한 인증이 없습니다.");
         body.put("path", request.getRequestURI());
 
-        final ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }
 }

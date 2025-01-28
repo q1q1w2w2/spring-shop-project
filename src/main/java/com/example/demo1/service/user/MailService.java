@@ -13,23 +13,26 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.*;
+
 @Service
 @RequiredArgsConstructor
-public class MailSendService {
+public class MailService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final JavaMailSender mailSender;
-    private int authNumber;
+    private String authNumber;
 
-    private final String AUTH_CODE_PREFIX = "authCode:";
+    private static final String AUTH_CODE_PREFIX = "authCode:";
+    private static final int AUTH_CODE_TTL = 5;
 
     public void makeRandomNumber() {
         Random random = new Random();
-        String randomNumber = "";
+        StringBuilder codeBuilder = new StringBuilder();
         for (int i = 0; i < 6; i++) {
-            randomNumber += Integer.toString(random.nextInt(10));
+            codeBuilder.append(random.nextInt(10));
         }
-        authNumber = Integer.parseInt(randomNumber);
+        authNumber = codeBuilder.toString();
     }
 
     public String joinEmail(String email) {
@@ -49,14 +52,12 @@ public class MailSendService {
                         "<h2>인증 번호는 " + authNumber + "입니다.</h2>" +
                         "<br>";
 
-        String authCode = Integer.toString(authNumber);
-
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(AUTH_CODE_PREFIX + email, authCode, 5, TimeUnit.MINUTES);
+        valueOperations.set(AUTH_CODE_PREFIX + email, authNumber, AUTH_CODE_TTL, MINUTES);
 
         mailSend(setFrom, toMail, title, content);
 
-        return authCode;
+        return authNumber;
     }
 
     public void mailSend(String setFrom, String toMail, String title, String content) {
@@ -69,7 +70,7 @@ public class MailSendService {
             helper.setText(content, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("인증코드 발송에 실패했습니다.");
+            throw new RuntimeException("인증코드 발송에 실패했습니다: " + e.getMessage());
         }
     }
 

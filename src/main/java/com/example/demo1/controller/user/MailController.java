@@ -3,7 +3,7 @@ package com.example.demo1.controller.user;
 import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.user.EmailCodeValidDto;
 import com.example.demo1.dto.user.EmailRequestDto;
-import com.example.demo1.service.user.MailSendService;
+import com.example.demo1.service.user.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class MailController {
 
-    private final MailSendService mailService;
+    private final MailService mailService;
 
     @PostMapping("/api/mailSend")
     public ResponseEntity<ApiResponse<Object>> mailSend(@RequestBody @Valid EmailRequestDto emailDto) {

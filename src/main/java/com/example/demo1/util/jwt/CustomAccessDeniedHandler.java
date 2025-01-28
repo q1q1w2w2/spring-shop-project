@@ -17,7 +17,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         // 403
-        final Map<String, Object> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -28,7 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         body.put("message", "권한이 없습니다.");
         body.put("path", request.getRequestURI());
 
-        final ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }
 }

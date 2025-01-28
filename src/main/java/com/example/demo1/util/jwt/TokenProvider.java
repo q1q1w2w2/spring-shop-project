@@ -21,9 +21,14 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.*;
 
+import static com.example.demo1.util.constant.Role.*;
+
 @Component
 @Slf4j
 public class TokenProvider implements InitializingBean {
+
+    private static final String CLAIM_AUTHORITY = "authority";
+    private static final String REDIS_REFRESH_KEY_PREFIX = "refreshToken:";
 
     private SecretKey key;
     private SecretKey claimKey;
@@ -65,10 +70,10 @@ public class TokenProvider implements InitializingBean {
 
     public String createRefreshToken(String subject) throws Exception {
         String encryptSubject = AesUtil.encrypt(subject, claimKey);
-        String encryptAuthority = AesUtil.encrypt(Role.ROLE_USER.toString(), claimKey);
+        String encryptAuthority = AesUtil.encrypt(ROLE_USER.toString(), claimKey);
         String refreshToken = createToken(encryptSubject, encryptAuthority, refreshTokenExpireTime);
 
-        redisTemplate.opsForValue().set("refreshToken:" + subject, refreshToken);
+        redisTemplate.opsForValue().set(REDIS_REFRESH_KEY_PREFIX + subject, refreshToken);
 
         return refreshToken;
     }
@@ -85,7 +90,7 @@ public class TokenProvider implements InitializingBean {
 
         return Jwts.builder()
                 .subject(subject)
-                .claim("authority", authority)
+                .claim(CLAIM_AUTHORITY, authority)
                 .issuedAt(new Date())
                 .expiration(validity)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -100,9 +105,9 @@ public class TokenProvider implements InitializingBean {
                 .getPayload();
 
         String subject = AesUtil.decrypt(claims.getSubject(), claimKey);
-        String encryptAuthority = Optional.ofNullable(claims.get("authority"))
+        String encryptAuthority = Optional.ofNullable(claims.get(CLAIM_AUTHORITY))
                 .map(Object::toString)
-                .orElse("ROLE_USER");
+                .orElse(ROLE_USER.toString());
         String authority = AesUtil.decrypt(encryptAuthority, claimKey);
 
         return createAuthentication(subject, token, authority);
@@ -116,7 +121,7 @@ public class TokenProvider implements InitializingBean {
         return authorities.stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
-                .orElse("ROLE_USER");
+                .orElse(ROLE_USER.toString());
     }
 
     private Authentication createAuthentication(String subject, String token, String authority) {
@@ -138,18 +143,17 @@ public class TokenProvider implements InitializingBean {
 
     public boolean validateToken(String token) {
         try {
-            log.info("validateToken: {}", token);
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-            log.info("검증 성공");
+            log.info("토큰 검증 성공");
             return true;
         } catch (SignatureException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            log.warn("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 서명입니다.");
+            log.warn("만료된 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다");
+            log.warn("지원되지 않는 JWT 토큰입니다");
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.warn("JWT 토큰이 잘못되었습니다.");
         }
         return false;
     }

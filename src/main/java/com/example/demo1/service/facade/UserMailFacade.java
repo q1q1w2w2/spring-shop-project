@@ -2,7 +2,7 @@ package com.example.demo1.service.facade;
 
 import com.example.demo1.dto.user.*;
 import com.example.demo1.entity.user.User;
-import com.example.demo1.service.user.MailSendService;
+import com.example.demo1.service.user.MailService;
 import com.example.demo1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 public class UserMailFacade {
 
     private final UserService userService;
-    private final MailSendService mailService;
+    private final MailService mailService;
 
     @Transactional
     public UserResponseDto join(JoinDto joinDto) {
