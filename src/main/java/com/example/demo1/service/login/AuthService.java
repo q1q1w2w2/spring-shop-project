@@ -37,7 +37,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final String REDIS_KEY_PREFIX = "refreshToken:";
+    private static final String REDIS_KEY_PREFIX = "refreshToken:";
 
     @Transactional
     public TokensDto login(LoginDto dto) throws Exception {
@@ -48,7 +48,6 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String subject = authentication.getName();
-
         String authority = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)

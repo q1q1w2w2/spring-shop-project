@@ -20,8 +20,7 @@ import static com.example.demo1.util.constant.ItemStatus.*;
 @Table(name = "item",
         indexes = {
                 @Index(name = "item_name_idx", columnList = "item_name"),
-                @Index(name = "category_idx", columnList = "category"),
-                @Index(name = "status_idx", columnList = "status")
+                @Index(name = "status_idx", columnList = "state")
         }
 )
 public class Item {
