@@ -10,7 +10,6 @@ import com.example.demo1.service.facade.ReviewFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.demo1.util.common.ApiResponseUtil.*;
 import static org.springframework.http.HttpStatus.*;
 
 @Controller
@@ -58,15 +58,5 @@ public class ReviewController {
     public ResponseEntity<ApiResponse<Object>> reviewBlindCancel(@RequestParam Long reviewIdx) {
         reviewFacade.publishReview(reviewIdx);
         return createResponse(OK, "차단을 해제했습니다.");
-    }
-
-    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, String message) {
-        ApiResponse<T> response = ApiResponse.success(status, message);
-        return ResponseEntity.status(status).body(response);
-    }
-
-    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, T data) {
-        ApiResponse<T> response = ApiResponse.success(status, data);
-        return ResponseEntity.status(status).body(response);
     }
 }

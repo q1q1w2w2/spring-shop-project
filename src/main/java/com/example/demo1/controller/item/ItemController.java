@@ -7,15 +7,14 @@ import com.example.demo1.service.facade.ItemFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.example.demo1.util.common.ApiResponseUtil.*;
 import static org.springframework.http.HttpStatus.*;
 
 @Controller
@@ -63,15 +62,4 @@ public class ItemController {
         itemFacade.deleteItem(itemDto);
         return createResponse(OK, "상품이 삭제되었습니다.");
     }
-
-    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, String message) {
-        ApiResponse<T> response = ApiResponse.success(status, message, null);
-        return ResponseEntity.status(status).body(response);
-    }
-
-    private <T> ResponseEntity<ApiResponse<T>> createResponse(HttpStatus status, T data) {
-        ApiResponse<T> response = ApiResponse.success(status, data);
-        return ResponseEntity.status(status).body(response);
-    }
-
 }

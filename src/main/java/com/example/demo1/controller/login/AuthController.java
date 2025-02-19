@@ -5,17 +5,18 @@ import com.example.demo1.dto.common.ApiResponse;
 import com.example.demo1.dto.user.LoginDto;
 import com.example.demo1.dto.user.RefreshTokenDto;
 import com.example.demo1.service.login.AuthService;
+import com.example.demo1.util.common.ApiResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import static com.example.demo1.util.common.ApiResponseUtil.*;
 import static com.example.demo1.util.jwt.JwtFilter.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -34,9 +35,7 @@ public class AuthController {
     @PostMapping("/api/login")
     public ResponseEntity<ApiResponse<TokensDto>> login(@Valid @RequestBody LoginDto dto) throws Exception {
         TokensDto tokens = authService.login(dto);
-
-        ApiResponse<TokensDto> response = ApiResponse.success(OK, "로그인 되었습니다.", tokens);
-        return ResponseEntity.ok(response);
+        return createResponse(OK, "로그인 되었습니다.", tokens);
     }
 
     @PostMapping("/api/logout")
@@ -47,8 +46,6 @@ public class AuthController {
         String refreshToken = refreshTokenDto.getRefreshToken();
         String accessToken = authorization.substring(TOKEN_PREFIX.length());
         authService.logout(refreshToken, accessToken);
-
-        ApiResponse<Object> response = ApiResponse.success(OK, "로그아웃 되었습니다.");
-        return ResponseEntity.ok(response);
+        return createResponse(OK, "로그아웃 되었습니다.");
     }
 }

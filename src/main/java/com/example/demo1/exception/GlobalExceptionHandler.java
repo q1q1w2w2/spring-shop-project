@@ -17,6 +17,7 @@ import com.example.demo1.exception.token.TokenValidationException;
 import com.example.demo1.exception.user.UserAlreadyExistException;
 import com.example.demo1.exception.user.UserBannedException;
 import com.example.demo1.exception.user.UserNotFoundException;
+import com.example.demo1.util.common.ApiResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import static com.example.demo1.util.common.ApiResponseUtil.*;
 import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
@@ -148,12 +150,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleItemCartNotFoundException(ItemCartNotFoundException e) {
         return createErrorResponse(e, BAD_REQUEST, e.getMessage());
     }
-
-    // ResponseEntity 반환 메서드
-    private ResponseEntity<ApiResponse<Object>> createErrorResponse(Exception e, HttpStatus status, String message) {
-        log.error("[{} 발생]", e.getClass().getSimpleName());
-        ApiResponse<Object> response = ApiResponse.error(status, message);
-        return ResponseEntity.status(status).body(response);
-    }
-
 }
