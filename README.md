@@ -6,16 +6,15 @@
 ## 📙소개
 - 프로젝트 소개
   - 등록된 상품 목록을 확인하고 주문할 수 있는 쇼핑몰 서비스입니다.
-  - 프로젝트를 통해 개발의 전 과정을 경험해보고자 시작하게 되었습니다.
 
 - 개발 기간: 2024.09 ~ 2024.11
 
 - 사용 기술: 
   - Java
-  - Spring Boot, Spring Security, JPA, QueryDSL
-  - Mysql, Redis
-  - AWS(ec2, S3, RDS), Docker
-  - postman
+  - Spring Boot, Spring Security, Spring Data JPA, QueryDsl
+  - MySQL, Redis, H2
+  - AWS EC2/S3/RDS), Docker
+  - IntelliJ, Postman
 
 ---
 ## 🛠아키텍처
