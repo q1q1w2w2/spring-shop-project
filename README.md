@@ -12,8 +12,6 @@
 
 - 개발 기간: 2024.09 ~ 2024.11
 
-- 인원: 1명
-
 - 사용 기술: 
   - Java
   - Spring Boot, Spring Security, JPA, QueryDSL
