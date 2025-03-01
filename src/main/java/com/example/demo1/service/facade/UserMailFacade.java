@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class UserMailFacade {
         List<User> users = userService.findAllUser();
         return users.stream().
                 map(UserResponseDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

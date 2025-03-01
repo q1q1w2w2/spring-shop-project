@@ -15,7 +15,6 @@ import com.example.demo1.exception.Item.item.ItemOwnershipException;
 import com.example.demo1.repository.item.CategoryRepository;
 import com.example.demo1.repository.item.ItemImageRepository;
 import com.example.demo1.repository.item.ItemRepository;
-import com.example.demo1.util.constant.ItemStatus;
 import com.example.demo1.util.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.demo1.util.constant.Constants.*;
 import static com.example.demo1.util.constant.ItemStatus.*;
 
 @Service
@@ -41,20 +38,23 @@ public class ItemService {
     private final ItemImageRepository itemImageRepository;
 
     @Transactional
-    public SaveItemResponseDto save(ItemDto dto, List<MultipartFile> images, User user) {
-        if (dto.getPrice() < 0) {
-            throw new IllegalArgumentException("상품 가격은 양수여야 합니다.");
-        }
+    public SaveItemResponseDto save(ItemDto itemDto, List<MultipartFile> images, User user) {
+        validatePrice(itemDto.getPrice());
 
         Item item = Item.builder()
-                .itemName(dto.getItemName())
+                .itemName(itemDto.getItemName())
                 .userIdx(user)
-                .price(dto.getPrice())
-                .category(getCategory(dto.getCategory()))
-                .explanation(dto.getExplanation())
+                .price(itemDto.getPrice())
+                .category(getCategory(itemDto.getCategory()))
+                .explanation(itemDto.getExplanation())
                 .build();
-        itemRepository.save(item);
+        Item savedItem = itemRepository.save(item);
+        List<ItemImage> savedImages = saveImages(images, item);
 
+        return new SaveItemResponseDto(savedItem, savedImages);
+    }
+
+    private List<ItemImage> saveImages(List<MultipartFile> images, Item item) {
         if (images != null) {
             List<String> imageUrls = s3Service.saveFiles(images);
             for (int i = 0; i < imageUrls.size(); i++) {
@@ -67,14 +67,13 @@ public class ItemService {
                 itemImageRepository.save(itemImage);
             }
         }
-
-        return new SaveItemResponseDto(item, itemImageRepository.findByItem(item));
+        return itemImageRepository.findByItem(item);
     }
 
     @Transactional
     public Item update(ItemUpdateDto dto, User user) {
         Item findItem = findByIdx(dto.getIdx());
-        checkUserOwnership(user, findItem);
+        validateUserOwnership(user, findItem);
 
         Item item = Item.builder()
                 .itemName(dto.getItemName() != null ? dto.getItemName() : findItem.getItemName())
@@ -90,12 +89,10 @@ public class ItemService {
     public void delete(Long itemIdx, User user) {
         Item item = findByIdx(itemIdx);
         if (item.getStatus() == DELETED.getValue()) {
-            log.error("상품 삭제 실패: 이미 삭제된 상품");
             throw new ItemAlreadyDeleteException("이미 삭제된 상품입니다.");
         }
-        checkUserOwnership(user, item);
+        validateUserOwnership(user, item);
         item.delete();
-        log.info("상품 삭제 성공");
     }
 
     private Category getCategory(Long dto) {
@@ -103,9 +100,15 @@ public class ItemService {
                 .orElseThrow(CategoryNotFoundException::new);
     }
 
-    private void checkUserOwnership(User user, Item item) {
+    private void validateUserOwnership(User user, Item item) {
         if (!item.getUser().equals(user)) {
             throw new ItemOwnershipException();
+        }
+    }
+
+    private void validatePrice(int price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("상품 가격은 양수여야 합니다.");
         }
     }
 

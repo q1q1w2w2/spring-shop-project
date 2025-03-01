@@ -81,19 +81,12 @@ public class ItemCartService {
     }
 
     @Transactional
-    public void orderCart(Long itemCartIdx) {
-        ItemCart itemCart = itemCartRepository.findById(itemCartIdx)
-                .orElseThrow(ItemNotFoundException::new);
-        itemCart.updateStatus(CART_COMP.getValue());
-    }
-
-    @Transactional
     public void bulkOrderCart(List<CreateOrdersDto> ordersDto) {
         if (ordersDto.isEmpty()) return;
 
         List<Long> itemCartIds = ordersDto.stream()
                 .map(CreateOrdersDto::getItemIdx)
-                .collect(Collectors.toList());
+                .toList();
 
         itemCartRepository.bulkUpdateStatus(CART_COMP.getValue(), itemCartIds);
     }

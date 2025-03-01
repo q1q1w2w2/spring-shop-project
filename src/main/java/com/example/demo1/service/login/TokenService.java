@@ -24,7 +24,6 @@ public class TokenService {
 
         String accessToken = tokenProvider.createNewAccessToken(refreshToken);
         String newRefreshToken = tokenProvider.createRefreshToken(subject);
-
         return new TokensDto(accessToken, newRefreshToken);
     }
 }

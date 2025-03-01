@@ -29,12 +29,9 @@ public class ItemFacade {
     @Transactional
     public ItemResponseDto saveItem(ItemDto itemDto, List<MultipartFile> images) {
         SaveItemResponseDto savedItemInfo = itemService.save(itemDto, images, getCurrentUser());
-
-        Item item = savedItemInfo.getItem();
         List<ItemImage> itemImages = savedItemInfo.getItemImages();
-        List<String> imageUrls = getImageUrls(itemImages);
 
-        return new ItemResponseDto(item, imageUrls);
+        return new ItemResponseDto(savedItemInfo.getItem(), getImageUrls(itemImages));
     }
 
     @Transactional

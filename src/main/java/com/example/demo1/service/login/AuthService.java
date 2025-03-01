@@ -30,7 +30,6 @@ import static com.example.demo1.util.constant.Role.*;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthService {
 
     private final TokenProvider tokenProvider;
@@ -70,7 +69,6 @@ public class AuthService {
         Boolean hasKey = redisTemplate.hasKey(redisKey);
         if (hasKey != null && hasKey) {
             redisTemplate.delete(redisKey);
-            log.info("로그아웃 성공");
         } else {
             throw new TokenValidationException("토큰이 존재하지 않습니다.");
         }

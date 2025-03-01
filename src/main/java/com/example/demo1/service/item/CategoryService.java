@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,19 +22,13 @@ public class CategoryService {
         if (categoryRepository.existsByCategoryName(categoryName)) {
             throw new CategoryAlreadyExistException();
         }
-
-        Category category = new Category(categoryName);
-        Category saveCategory = categoryRepository.save(category);
-        return new CategoryResponseDto(saveCategory);
+        return new CategoryResponseDto(categoryRepository.save(new Category(categoryName)));
     }
 
     public List<CategoryResponseDto> findAll() {
-        List<CategoryResponseDto> categoryDtoList = new ArrayList<>();
-
         List<Category> categories = categoryRepository.findAll();
-        for (Category category : categories) {
-            categoryDtoList.add(new CategoryResponseDto(category));
-        }
-        return categoryDtoList;
+        return categories.stream()
+                .map(CategoryResponseDto::new)
+                .toList();
     }
 }

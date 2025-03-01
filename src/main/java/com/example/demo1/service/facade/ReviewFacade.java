@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class ReviewFacade {
         List<Review> reviews = reviewService.getReview(reviewSearch);
         return reviews.stream()
                 .map(GetReviewListDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<GetReviewListDto> getItemReviews(ItemRequestDto itemRequestDto) {
@@ -43,7 +41,7 @@ public class ReviewFacade {
         List<Review> reviewList = reviewService.getReviewByItemIdx(item);
         return reviewList.stream()
                 .map(GetReviewListDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

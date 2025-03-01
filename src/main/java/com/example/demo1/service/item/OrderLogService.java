@@ -22,8 +22,7 @@ public class OrderLogService {
     public List<OrderLog> findByOrderIdx(Long orderIdx) {
         Orders orders = ordersRepository.findById(orderIdx)
                 .orElseThrow(OrderNotFoundException::new);
-        List<OrderLog> orderLogs = orderLogRepository.findByOrders(orders)
+        return orderLogRepository.findByOrders(orders)
                 .orElseThrow(OrderNotFoundException::new);
-        return orderLogs;
     }
 }

@@ -13,7 +13,6 @@ import com.example.demo1.exception.order.OrderStepException;
 import com.example.demo1.repository.item.ItemRepository;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.order.OrdersRepository;
-import com.example.demo1.util.constant.ItemStatus;
 import com.example.demo1.util.constant.OrderStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static com.example.demo1.util.constant.Constants.*;
 import static com.example.demo1.util.constant.ItemStatus.*;
 import static com.example.demo1.util.constant.OrderStep.*;
 
@@ -39,56 +39,45 @@ public class OrderService {
 
     @Transactional
     public OrderResult saveOrders(User user, List<CreateOrdersDto> dtoList) {
+        Map<Long, Item> itemMap = dtoList.stream()
+                .map(dto -> itemRepository.findById(dto.getItemIdx())
+                        .orElseThrow(ItemNotFoundException::new))
+                .peek(item -> {
+                    if (item.getStatus() == DELETED.getValue()) {
+                        throw new ItemAlreadyDeleteException("삭제된 상품이 포함되어 있습니다: " + item.getIdx());
+                    }
+                })
+                .collect(Collectors.toMap(Item::getIdx, item -> item));
 
-        for (CreateOrdersDto dto : dtoList) {
-            Item item = itemRepository.findById(dto.getItemIdx())
-                    .orElseThrow(ItemNotFoundException::new);
-
-            if (item.getStatus() == DELETED.getValue()) {
-                throw new ItemAlreadyDeleteException("삭제된 상품이 포함되어 있습니다: " + dto.getItemIdx());
-            }
-
-            if (dto.getQuantity() < 1) {
-                throw new InvalidQuantityException("1개 이상의 수량을 입력해야 합니다.");
-            }
+        if (dtoList.stream().anyMatch(dto -> dto.getQuantity() < 1)) {
+            throw new InvalidQuantityException("1개 이상의 수량을 입력해야 합니다.");
         }
 
         Orders orders = Orders.createOrders(user);
         ordersRepository.save(orders);
 
-        List<OrderLog> orderLogs = new ArrayList<>();
-        for (CreateOrdersDto dto : dtoList) {
-            Item item = itemRepository.findById(dto.getItemIdx())
-                    .orElseThrow(ItemNotFoundException::new);
-
-            OrderLog orderLog = OrderLog.createOrderLog(orders, item, dto.getQuantity());
-            orderLogRepository.save(orderLog);
-
-            orderLogs.add(orderLog);
-        }
+        List<OrderLog> orderLogs = dtoList.stream()
+                .map(dto -> OrderLog.createOrderLog(orders, itemMap.get(dto.getItemIdx()), dto.getQuantity()))
+                .map(orderLogRepository::save)
+                .toList();
 
         return new OrderResult(orders, orderLogs);
     }
+
 
     public List<Orders> findAll(OrderSearch orderSearch) {
         return ordersRepository.findAll(orderSearch);
     }
 
-
     public List<OrderDetailForPersonal> findAll(OrderSearch orderSearch, User user) {
-        List<OrderDetailForPersonal> response = new ArrayList<>();
-        List<Orders> orderList = ordersRepository.findAll(orderSearch, user);
-
-        for (Orders orders : orderList) {
-            List<OrderLogDetailForPersonal> orderLogList = new ArrayList<>();
-            for (OrderLog orderLog : orders.getOrderLogs()) {
-                orderLogList.add(new OrderLogDetailForPersonal(orderLog));
-            }
-            OrderDetailForPersonal dto = new OrderDetailForPersonal(orders, orderLogList);
-            response.add(dto);
-        }
-
-        return response;
+        return ordersRepository.findAll(orderSearch, user).stream()
+                .map(orders -> new OrderDetailForPersonal(
+                        orders,
+                        orders.getOrderLogs().stream()
+                                .map(OrderLogDetailForPersonal::new)
+                                .toList()
+                ))
+                .toList();
     }
 
     @Transactional

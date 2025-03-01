@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class CartFacade {
         List<ItemCart> cartList = itemCartService.getCart(user);
         List<CreateOrdersDto> orderList = cartList.stream()
                 .map(cart -> new CreateOrdersDto(cart.getItem().getIdx(), cart.getEa()))
-                .collect(Collectors.toList());
+                .toList();
 
         itemCartService.bulkOrderCart(orderList);
         orderService.saveOrders(user, orderList);

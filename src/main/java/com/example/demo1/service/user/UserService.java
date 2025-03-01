@@ -33,11 +33,13 @@ public class UserService {
 
     @Transactional
     public User join(JoinDto dto) {
+        checkUserExistence(dto);
         return joinUser(dto, ROLE_USER);
     }
 
     @Transactional
     public User joinAdmin(JoinDto dto) {
+        checkUserExistence(dto);
         return joinUser(dto, ROLE_ADMIN);
     }
 

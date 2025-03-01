@@ -11,13 +11,11 @@ import com.example.demo1.exception.Item.review.ReviewNotFoundException;
 import com.example.demo1.exception.order.OrderNotFoundException;
 import com.example.demo1.repository.order.OrderLogRepository;
 import com.example.demo1.repository.item.ReviewRepository;
-import com.example.demo1.util.constant.OrderStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.demo1.util.constant.Constants.*;
@@ -33,10 +31,23 @@ public class ReviewService {
     private final OrderLogRepository orderLogRepository;
 
     @Transactional
-    public Review saveReview(CreateReviewDto dto, Long userId) {
-        OrderLog orderLog = orderLogRepository.findById(dto.getOrderLogIdx())
-                .orElseThrow(OrderNotFoundException::new);
+    public Review saveReview(CreateReviewDto reviewDto, Long userId) {
+        OrderLog orderLog = getOrderLog(reviewDto.getOrderLogIdx());
 
+        canWriteReview(orderLog, userId);
+
+        orderLog.updateReviewStatus(REVIEW_COMP);
+
+        Review review = Review.builder()
+                .orderLog(orderLog)
+                .review(reviewDto.getReview())
+                .score(reviewDto.getScore())
+                .build();
+
+        return reviewRepository.save(review);
+    }
+
+    private void canWriteReview(OrderLog orderLog, Long userId) {
         Orders orders = orderLog.getOrders();
 
         if (!orders.getUser().getId().equals(userId)) {
@@ -48,16 +59,11 @@ public class ReviewService {
         if (orderLog.getReview() == REVIEW_COMP) {
             throw new ReviewNotAllowedException("이미 리뷰를 작성한 주문입니다.");
         }
+    }
 
-        orderLog.updateReviewStatus(REVIEW_COMP);
-
-        Review review = Review.builder()
-                .orderLog(orderLog)
-                .review(dto.getReview())
-                .score(dto.getScore())
-                .build();
-
-        return reviewRepository.save(review);
+    private OrderLog getOrderLog(Long orderLogIdx) {
+        return orderLogRepository.findById(orderLogIdx)
+                .orElseThrow(OrderNotFoundException::new);
     }
 
     public List<Review> getReview(ReviewSearch reviewSearch) {

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class OrderFacade {
                         new OrderResponseDto(order),
                         order.getOrderLogs().stream()
                                 .map(OrderLogDetailDto::new)
-                                .collect(Collectors.toList())
+                                .toList()
                 ))
                 .findFirst()
                 .orElseGet(OrderListResponseDto::new);
@@ -50,7 +49,7 @@ public class OrderFacade {
         List<OrderLog> orderLogs = orderLogService.findByOrderIdx(orderIdx);
         return orderLogs.stream()
                 .map(OrderLogResponseDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
