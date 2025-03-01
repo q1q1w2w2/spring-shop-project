@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,23 +33,17 @@ public class ReviewFacade {
 
     public List<GetReviewListDto> getReviews(ReviewSearch reviewSearch) {
         List<Review> reviews = reviewService.getReview(reviewSearch);
-
-        List<GetReviewListDto> reviewList = new ArrayList<>();
-        for (Review review : reviews) {
-            reviewList.add(new GetReviewListDto(review));
-        }
-        return reviewList;
+        return reviews.stream()
+                .map(GetReviewListDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<GetReviewListDto> getItemReviews(ItemRequestDto itemRequestDto) {
         Item item = itemService.findByIdx(itemRequestDto.getItemIdx());
         List<Review> reviewList = reviewService.getReviewByItemIdx(item);
-
-        List<GetReviewListDto> itemReviews = new ArrayList<>();
-        for (Review review : reviewList) {
-            itemReviews.add(new GetReviewListDto(review));
-        }
-        return itemReviews;
+        return reviewList.stream()
+                .map(GetReviewListDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional

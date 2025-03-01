@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +38,9 @@ public class UserMailFacade {
 
     public List<UserResponseDto> getUsers() {
         List<User> users = userService.findAllUser();
-        List<UserResponseDto> userList = new ArrayList<>();
-        for (User user : users) {
-            userList.add(new UserResponseDto(user));
-        }
-        return userList;
+        return users.stream().
+                map(UserResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package com.example.demo1.service.item;
 
 import com.example.demo1.dto.item.ItemCartResponseDto;
+import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.entity.item.Item;
 import com.example.demo1.entity.item.ItemCart;
 import com.example.demo1.entity.user.User;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.demo1.util.constant.CartStatus.*;
 
@@ -79,10 +81,21 @@ public class ItemCartService {
     }
 
     @Transactional
-    public void orderCart(Long itemCartIdx, User user) {
+    public void orderCart(Long itemCartIdx) {
         ItemCart itemCart = itemCartRepository.findById(itemCartIdx)
                 .orElseThrow(ItemNotFoundException::new);
         itemCart.updateStatus(CART_COMP.getValue());
+    }
+
+    @Transactional
+    public void bulkOrderCart(List<CreateOrdersDto> ordersDto) {
+        if (ordersDto.isEmpty()) return;
+
+        List<Long> itemCartIds = ordersDto.stream()
+                .map(CreateOrdersDto::getItemIdx)
+                .collect(Collectors.toList());
+
+        itemCartRepository.bulkUpdateStatus(CART_COMP.getValue(), itemCartIds);
     }
 
     @Transactional

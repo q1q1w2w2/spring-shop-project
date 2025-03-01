@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,36 +47,39 @@ public class ItemFacade {
         User user = getCurrentUser();
         Item updatedItem = itemService.update(updateDto, user);
 
-        if (addImages != null) {
-            itemImageService.addItemImage(addImages, updatedItem);
-        }
-        if (deleteImageSeq != null) {
-            itemImageService.deleteItemImage(deleteImageSeq, updatedItem);
-        }
-        if (updateImageSeq != null) {
-            itemImageService.updateSeq(updateImageSeq, updatedItem);
-        }
-        if (changeImages != null) {
-            itemImageService.changeImages(changeImages, updatedItem);
-        }
-
-        List<ItemImage> itemImages = itemImageService.findActivateImageByItem(updatedItem);
-        List<String> imageUrls = getImageUrls(itemImages);
+        processImageUpdates(updatedItem, addImages, deleteImageSeq, updateImageSeq, changeImages);
+        List<String> imageUrls = getImageUrls(itemImageService.findActivateImageByItem(updatedItem));
 
         return new ItemResponseDto(updatedItem, imageUrls);
     }
 
+    private void processImageUpdates(Item item,
+                                     List<MultipartFile> addImages,
+                                     List<Integer> deleteImageSeq,
+                                     List<Integer> updateImageSeq,
+                                     List<MultipartFile> changeImages) {
+        Optional.ofNullable(addImages)
+                .filter(list -> !list.isEmpty())
+                .ifPresent(images -> itemImageService.addItemImage(images, item));
+
+        Optional.ofNullable(deleteImageSeq)
+                .filter(list -> !list.isEmpty())
+                .ifPresent(seq -> itemImageService.deleteItemImage(seq, item));
+
+        Optional.ofNullable(updateImageSeq)
+                .filter(list -> !list.isEmpty())
+                .ifPresent(seq -> itemImageService.updateSeq(seq, item));
+
+        Optional.ofNullable(changeImages)
+                .filter(list -> !list.isEmpty())
+                .ifPresent(images -> itemImageService.changeImages(images, item));
+    }
+
     public List<ItemListDto> getAllItems(ItemSearch itemSearch) {
         List<Item> itemList = itemService.findAll(itemSearch);
-        List<ItemListDto> itemDtoList = new ArrayList<>();
-
-        for (Item item : itemList) {
-            List<ItemImage> images = itemImageService.findActivateImageByItem(item);
-            List<String> imageUrls = getImageUrls(images);
-            itemDtoList.add(new ItemListDto(item, imageUrls));
-        }
-
-        return itemDtoList;
+        return itemList.stream()
+                .map(item -> new ItemListDto(item, getImageUrls(itemImageService.findActivateImageByItem(item))))
+                .toList();
     }
 
     public ItemResponseDto getItem(Long itemIdx) {
@@ -97,10 +100,8 @@ public class ItemFacade {
     }
 
     private List<String> getImageUrls(List<ItemImage> itemImages) {
-        List<String> imageUrls = new ArrayList<>();
-        for (ItemImage itemImage : itemImages) {
-            imageUrls.add(itemImage.getImageUrl());
-        }
-        return imageUrls;
+        return itemImages.stream()
+                .map(ItemImage::getImageUrl)
+                .collect(Collectors.toList());
     }
 }

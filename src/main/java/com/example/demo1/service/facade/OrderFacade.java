@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,19 +31,15 @@ public class OrderFacade {
 
     public OrderListResponseDto getOrdersForAdmin(OrderSearch orderSearch) {
         List<Orders> orders = orderService.findAll(orderSearch);
-
-        OrderListResponseDto orderListResponseDto = new OrderListResponseDto();
-        for (Orders order : orders) {
-            orderListResponseDto.setOrderInfo(new OrderResponseDto(order));
-
-            List<OrderLogDetailDto> orderLogResponse = new ArrayList<>();
-            for (OrderLog orderLog : order.getOrderLogs()) {
-                orderLogResponse.add(new OrderLogDetailDto(orderLog));
-            }
-            orderListResponseDto.setOrderLogs(orderLogResponse);
-        }
-
-        return orderListResponseDto;
+        return orders.stream()
+                .map(order -> new OrderListResponseDto(
+                        new OrderResponseDto(order),
+                        order.getOrderLogs().stream()
+                                .map(OrderLogDetailDto::new)
+                                .collect(Collectors.toList())
+                ))
+                .findFirst()
+                .orElseGet(OrderListResponseDto::new);
     }
 
     public List<OrderDetailForPersonal> getOrdersForPersonal(OrderSearch orderSearch) {
@@ -51,11 +48,9 @@ public class OrderFacade {
 
     public List<OrderLogResponseDto> getOrderDetail(Long orderIdx) {
         List<OrderLog> orderLogs = orderLogService.findByOrderIdx(orderIdx);
-        List<OrderLogResponseDto> orderLogDtoList = new ArrayList<>();
-        for (OrderLog orderLog : orderLogs) {
-            orderLogDtoList.add(new OrderLogResponseDto(orderLog));
-        }
-        return orderLogDtoList;
+        return orderLogs.stream()
+                .map(OrderLogResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional

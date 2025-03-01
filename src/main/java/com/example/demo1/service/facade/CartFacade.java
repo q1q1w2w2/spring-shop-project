@@ -3,7 +3,6 @@ package com.example.demo1.service.facade;
 import com.example.demo1.dto.item.AddItemCartDto;
 import com.example.demo1.dto.item.ItemCartEaUpdateDto;
 import com.example.demo1.dto.item.ItemCartResponseDto;
-import com.example.demo1.dto.item.ItemUpdateDto;
 import com.example.demo1.dto.order.CreateOrdersDto;
 import com.example.demo1.entity.item.ItemCart;
 import com.example.demo1.entity.user.User;
@@ -14,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,12 +46,12 @@ public class CartFacade {
     public void orderCart() {
         User user = getCurrentUser();
 
-        List<CreateOrdersDto> orderList = new ArrayList<>();
         List<ItemCart> cartList = itemCartService.getCart(user);
-        for (ItemCart itemCart : cartList) {
-            orderList.add(new CreateOrdersDto(itemCart.getItem().getIdx(), itemCart.getEa()));
-            itemCartService.orderCart(itemCart.getIdx(), user);
-        }
+        List<CreateOrdersDto> orderList = cartList.stream()
+                .map(cart -> new CreateOrdersDto(cart.getItem().getIdx(), cart.getEa()))
+                .collect(Collectors.toList());
+
+        itemCartService.bulkOrderCart(orderList);
         orderService.saveOrders(user, orderList);
     }
 

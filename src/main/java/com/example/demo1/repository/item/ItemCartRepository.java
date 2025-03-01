@@ -18,4 +18,7 @@ public interface ItemCartRepository extends JpaRepository<ItemCart, Long> {
 
     @Query("SELECT ic FROM ItemCart ic WHERE ic.user.id = :userIdx AND ic.item.idx = :itemIdx AND ic.status = 0")
     Optional<ItemCart> findByUserIdAndItemIdxAndStatusZero(@Param("userIdx") Long userIdx, @Param("itemIdx") Long itemIdx);
+
+    @Query("UPDATE ItemCart ic SET ic.status = :status WHERE ic.idx IN :itemCartIds")
+    void bulkUpdateStatus(@Param("status") int status, @Param("itemCartIds") List<Long> itemCartIds);
 }
